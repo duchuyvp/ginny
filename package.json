@@ -33,7 +33,8 @@
     "src/proxy/",
     "src/logger.ts",
     "src/mcpTools.ts",
-    "README.md"
+    "README.md",
+    "src/plugin/"
   ],
   "keywords": [
     "opencode",
