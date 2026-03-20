@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.7.0](https://github.com/rynfar/opencode-claude-max-proxy/compare/v1.6.1...v1.7.0) (2026-03-20)
+
+
+### Features
+
+* register OpenCode tools as MCP tools in passthrough mode ([e683539](https://github.com/rynfar/opencode-claude-max-proxy/commit/e6835398611374ca924d9e389d64c27ca5ce88c5))
+
+
+### Bug Fixes
+
+* block SDK tools with schema-incompatible OpenCode equivalents ([5bfd10f](https://github.com/rynfar/opencode-claude-max-proxy/commit/5bfd10f9b4b0900954b17c153846cf9f2f79b292))
+
 ## [1.6.1](https://github.com/rynfar/opencode-claude-max-proxy/compare/v1.6.0...v1.6.1) (2026-03-20)
 
 
