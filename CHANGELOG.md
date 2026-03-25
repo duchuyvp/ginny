@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.17.2](https://github.com/rynfar/opencode-claude-max-proxy/compare/v1.17.1...v1.17.2) (2026-03-25)
+
+
+### Bug Fixes
+
+* cache failed auth status lookups to avoid repeated exec calls ([#145](https://github.com/rynfar/opencode-claude-max-proxy/issues/145)) ([4a79701](https://github.com/rynfar/opencode-claude-max-proxy/commit/4a7970109586b7eb07907eb547c40bcb9c7867ca))
+* retry as fresh session when undo hits stale UUID ([#146](https://github.com/rynfar/opencode-claude-max-proxy/issues/146)) ([67442c4](https://github.com/rynfar/opencode-claude-max-proxy/commit/67442c42442af1651306f92b9eb2fa003ac29b77)), closes [#140](https://github.com/rynfar/opencode-claude-max-proxy/issues/140)
+* use subscription type to determine sonnet model variant ([#139](https://github.com/rynfar/opencode-claude-max-proxy/issues/139)) ([7aee13c](https://github.com/rynfar/opencode-claude-max-proxy/commit/7aee13c6f2e766dab77924138c35ce5d96efa778))
+
 ## [1.17.1](https://github.com/rynfar/opencode-claude-max-proxy/compare/v1.17.0...v1.17.1) (2026-03-25)
 
 
