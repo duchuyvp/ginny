@@ -19,10 +19,7 @@ import {
   messageStop,
   assistantMessage,
 } from "./helpers"
-import { mkdtempSync, rmSync } from "node:fs"
-import { tmpdir } from "node:os"
-import { join } from "node:path"
-const { setSessionStoreDir, storeSharedSession } = await import("../proxy/sessionStore")
+
 
 // ─── captured query params ────────────────────────────────────────────────────
 let capturedOptions: Record<string, unknown> = {}
@@ -406,53 +403,6 @@ describe("GET /v1/sessions/:claudeSessionId/context-usage", () => {
   })
 })
 
-describe("GET /v1/sessions/:claudeSessionId/context-usage — shared store", () => {
-  let tmpSessionDir: string
-  let prevEnv: string | undefined
-
-  beforeEach(() => {
-    tmpSessionDir = mkdtempSync(join(tmpdir(), "sdk-params-session-store-"))
-    // Use env var instead of setSessionStoreDir so this test is not sensitive
-    // to setSessionStoreDir being overwritten by parallel test files sharing
-    // the same Bun process. clearSessionCache() clears the in-memory LRU only;
-    // shared-store reads go via env var which we own for this test.
-    prevEnv = process.env.MERIDIAN_SESSION_DIR
-    process.env.MERIDIAN_SESSION_DIR = tmpSessionDir
-    clearSessionCache()
-  })
-
-  afterEach(() => {
-    if (prevEnv !== undefined) {
-      process.env.MERIDIAN_SESSION_DIR = prevEnv
-    } else {
-      delete process.env.MERIDIAN_SESSION_DIR
-    }
-    clearSessionCache()
-    try { rmSync(tmpSessionDir, { recursive: true, force: true }) } catch {}
-  })
-
-  it("returns usage persisted in the shared session store", async () => {
-    const claudeSessionId = "sess_shared_usage_001"
-    storeSharedSession(
-      "shared-key-usage",
-      claudeSessionId,
-      1,
-      "lineage",
-      ["msg-hash"],
-      [null],
-      { input_tokens: 77, output_tokens: 11 }
-    )
-
-    const app = createTestApp()
-    const res = await app.fetch(
-      new Request(`http://localhost/v1/sessions/${claudeSessionId}/context-usage`)
-    )
-
-    expect(res.status).toBe(200)
-    const body = await res.json() as Record<string, unknown>
-    const usage = body.context_usage as Record<string, unknown>
-    expect(body.session_id).toBe(claudeSessionId)
-    expect(usage.input_tokens).toBe(77)
-    expect(usage.output_tokens).toBe(11)
-  })
-})
+// Note: context-usage shared store test is in proxy-context-usage-store.test.ts,
+// which runs in a separate bun test invocation to avoid module-singleton
+// contamination from parallel test files that also use setSessionStoreDir.
