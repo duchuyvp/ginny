@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.30.2](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.1...ginny-v1.30.2) (2026-04-07)
+
+
+### Bug Fixes
+
+* use scoped npm package name @duchuyvp/ginny ([280cc4f](https://github.com/duchuyvp/ginny/commit/280cc4f0f71695b2b93422ce87415b51f47718de))
+
 ## [1.30.1](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.0...ginny-v1.30.1) (2026-04-07)
 
 
