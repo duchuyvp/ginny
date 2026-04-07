@@ -12,7 +12,7 @@
   <rect x="128" y="115" width="256" height="200" rx="40" fill="#2D2750"/>
   <rect x="128" y="115" width="256" height="200" rx="40" fill="none" stroke="#8B7CF6" stroke-width="4"/>
   
-  <!-- Eyes — screens with Meridian purple glow -->
+  <!-- Eyes — screens with Ginny purple glow -->
   <rect x="170" y="165" width="68" height="52" rx="14" fill="#1C1830" stroke="#8B7CF6" stroke-width="3"/>
   <rect x="274" y="165" width="68" height="52" rx="14" fill="#1C1830" stroke="#8B7CF6" stroke-width="3"/>
   <!-- Eye glow -->
@@ -41,7 +41,7 @@
   <!-- Body / chest plate -->
   <rect x="148" y="343" width="216" height="120" rx="30" fill="#2D2750" stroke="#8B7CF6" stroke-width="4"/>
   
-  <!-- Meridian logo on chest — the globe axis + arcs -->
+  <!-- Ginny logo on chest — the globe axis + arcs -->
   <line x1="256" y1="365" x2="256" y2="443" stroke="#8B7CF6" stroke-width="6" stroke-linecap="round"/>
   <!-- Chest latitude arcs -->
   <path d="M212 382 A48 48 0 0 1 300 382" fill="none" stroke="#C4B5FD" stroke-width="3" opacity="0.5"/>

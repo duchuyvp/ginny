@@ -6,7 +6,7 @@
  *
  * This is a minimal example. For a full-featured OpenCode plugin with
  * automatic proxy lifecycle management, see:
- *   https://github.com/ianjwhite99/opencode-meridian
+ *   https://github.com/ianjwhite99/opencode-ginny
  *
  * Usage:
  *   Copy this file into your project and add to opencode.json:

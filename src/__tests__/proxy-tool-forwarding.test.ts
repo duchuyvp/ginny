@@ -317,7 +317,7 @@ describe("Proxy basics", () => {
     const body = await response.json() as any
 
     expect(body.status).toBe("ok")
-    expect(body.service).toBe("meridian")
+    expect(body.service).toBe("ginny")
     expect(body.endpoints).toContain("/v1/messages")
     expect(body.endpoints).toContain("/messages")
   })
@@ -332,7 +332,7 @@ describe("Proxy basics", () => {
     const html = await response.text()
 
     expect(response.headers.get("content-type")).toContain("text/html")
-    expect(html).toContain("Meridian")
+    expect(html).toContain("Ginny")
   })
 
   it("should accept requests on both /v1/messages and /messages", async () => {

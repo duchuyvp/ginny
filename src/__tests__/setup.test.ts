@@ -10,10 +10,10 @@ import { tmpdir } from "os"
 import { join } from "path"
 import { checkPluginConfigured, findOpencodeConfigPath, runSetup } from "../proxy/setup"
 
-const PLUGIN_PATH = "/usr/local/lib/node_modules/@rynfar/meridian/plugin/meridian.ts"
+const PLUGIN_PATH = "/usr/local/lib/node_modules/ginny/plugin/ginny.ts"
 
 function makeTmpDir() {
-  return mkdtempSync(join(tmpdir(), "meridian-setup-test-"))
+  return mkdtempSync(join(tmpdir(), "ginny-setup-test-"))
 }
 
 describe("findOpencodeConfigPath", () => {
@@ -63,13 +63,13 @@ describe("checkPluginConfigured", () => {
     expect(checkPluginConfigured(path)).toBe(false)
   })
 
-  it("returns false when plugin array has no meridian entry", () => {
+  it("returns false when plugin array has no ginny entry", () => {
     const path = join(tmp, "opencode.json")
     writeFileSync(path, JSON.stringify({ plugin: ["opencode-antigravity-auth"] }))
     expect(checkPluginConfigured(path)).toBe(false)
   })
 
-  it("returns true when meridian.ts path is present", () => {
+  it("returns true when ginny.ts path is present", () => {
     const path = join(tmp, "opencode.json")
     writeFileSync(path, JSON.stringify({ plugin: [PLUGIN_PATH] }))
     expect(checkPluginConfigured(path)).toBe(true)
@@ -138,9 +138,9 @@ describe("runSetup", () => {
     expect(written.plugin).toContain(PLUGIN_PATH)
   })
 
-  it("removes stale meridian-agent-mode entry", () => {
+  it("removes stale ginny-agent-mode entry", () => {
     const configPath = join(tmp, "opencode.json")
-    const stalePath = "/some/path/meridian-agent-mode.ts"
+    const stalePath = "/some/path/ginny-agent-mode.ts"
     writeFileSync(configPath, JSON.stringify({ plugin: ["opencode-antigravity-auth", stalePath] }))
 
     runSetup(PLUGIN_PATH, configPath)

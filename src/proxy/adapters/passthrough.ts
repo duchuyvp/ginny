@@ -7,7 +7,7 @@
  * blocks to LiteLLM for execution rather than running them internally.
  *
  * Key characteristics:
- * - Passthrough mode always enabled (overrides MERIDIAN_PASSTHROUGH env var)
+ * - Passthrough mode always enabled (overrides GINNY_PASSTHROUGH env var)
  * - Streaming: respects the client's stream parameter (body.stream)
  * - Session continuity: uses x-litellm-session-id header when present
  * - CWD: extracts from <env cwd="..."> blocks in the prompt if available
@@ -124,7 +124,7 @@ export const passthroughAdapter: AgentAdapter = {
   },
 
   /**
-   * Always use passthrough mode regardless of MERIDIAN_PASSTHROUGH env var.
+   * Always use passthrough mode regardless of GINNY_PASSTHROUGH env var.
    * LiteLLM sends tool_results back — the proxy must forward tool_use blocks
    * to the client rather than executing them internally.
    */

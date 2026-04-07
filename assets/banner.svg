@@ -20,7 +20,7 @@
 
   <!-- Logo mark — V2 full globe -->
   <g transform="translate(380, 90)">
-    <!-- Meridian axis -->
+    <!-- Ginny axis -->
     <line x1="80" y1="8" x2="80" y2="192" stroke="#8B7CF6" stroke-width="5" stroke-linecap="round"/>
     <!-- Latitude arcs — outer -->
     <path d="M28 50 A60 60 0 0 1 132 50" fill="none" stroke="#C4B5FD" stroke-width="2.5" opacity="0.4"/>
@@ -36,7 +36,7 @@
   </g>
 
   <!-- Wordmark -->
-  <text x="540" y="195" font-family="Inter, -apple-system, 'SF Pro Display', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="72" font-weight="700" fill="#e0e7ff" letter-spacing="10">MERIDIAN</text>
+  <text x="540" y="195" font-family="Inter, -apple-system, 'SF Pro Display', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="72" font-weight="700" fill="#e0e7ff" letter-spacing="10">GINNY</text>
 
   <!-- Tagline -->
   <text x="543" y="240" font-family="Inter, -apple-system, 'SF Pro Display', 'Segoe UI', Helvetica, Arial, sans-serif" font-size="17" font-weight="600" fill="#8B7CF6" letter-spacing="3">HARNESS CLAUDE, YOUR WAY.</text>

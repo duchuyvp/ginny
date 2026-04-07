@@ -51,7 +51,7 @@ const DEFAULT_MAX_STORED_SESSIONS = 10_000
 const STALE_LOCK_THRESHOLD_MS = 30_000
 
 function getMaxStoredSessions(): number {
-  const raw = process.env.MERIDIAN_MAX_STORED_SESSIONS ?? process.env.CLAUDE_PROXY_MAX_STORED_SESSIONS
+  const raw = process.env.GINNY_MAX_STORED_SESSIONS ?? process.env.CLAUDE_PROXY_MAX_STORED_SESSIONS
   if (!raw) return DEFAULT_MAX_STORED_SESSIONS
   const parsed = Number.parseInt(raw, 10)
   if (!Number.isFinite(parsed) || parsed <= 0) return DEFAULT_MAX_STORED_SESSIONS
@@ -110,7 +110,7 @@ export function setSessionStoreDir(dir: string | null, opts?: { skipLocking?: bo
 
 function getStorePath(): string {
   const dir = sessionDirOverride
-    || process.env.MERIDIAN_SESSION_DIR
+    || process.env.GINNY_SESSION_DIR
     || process.env.CLAUDE_PROXY_SESSION_DIR
     || getDefaultCacheDir()
   if (!existsSync(dir)) {
@@ -120,18 +120,31 @@ function getStorePath(): string {
 }
 
 /**
- * Resolve the default cache directory, auto-migrating from the old name.
- * If ~/.cache/opencode-claude-max-proxy exists but ~/.cache/meridian does not,
- * creates a symlink so sessions are preserved without user action.
+ * Resolve the default cache directory, auto-migrating from old names.
+ * If ~/.cache/meridian or ~/.cache/opencode-claude-max-proxy exists but
+ * ~/.cache/ginny does not, creates a symlink so sessions are preserved
+ * without user action.
  */
 function getDefaultCacheDir(): string {
-  const newDir = join(homedir(), ".cache", "meridian")
+  const newDir = join(homedir(), ".cache", "ginny")
+  const meridianDir = join(homedir(), ".cache", "meridian")
   const oldDir = join(homedir(), ".cache", "opencode-claude-max-proxy")
 
   // Already using the new directory
   if (existsSync(newDir)) return newDir
 
-  // Old directory exists — create symlink for seamless migration
+  // Migrate from meridian (previous name)
+  if (existsSync(meridianDir)) {
+    try {
+      const { symlinkSync } = require("fs")
+      symlinkSync(meridianDir, newDir)
+    } catch {
+      return meridianDir
+    }
+    return newDir
+  }
+
+  // Migrate from opencode-claude-max-proxy (oldest name)
   if (existsSync(oldDir)) {
     try {
       const { symlinkSync } = require("fs")

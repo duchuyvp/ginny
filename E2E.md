@@ -89,10 +89,10 @@ kill $(lsof -ti :3456)
 | P2 | [Profile: Switch via API](#p2-profile-switch-via-api) | `POST /profiles/active` switches profile; health endpoint reflects new email | - |
 | P3 | [Profile: Persistence Across Restart](#p3-profile-persistence-across-restart) | Active profile survives proxy restart via settings.json | - |
 | P4 | [Profile: Request Routing](#p4-profile-request-routing) | Request on profile A uses different SDK auth than profile B | - |
-| P5 | [Profile: Per-Request Header Override](#p5-profile-per-request-header-override) | `x-meridian-profile` header routes single request to non-active profile | - |
+| P5 | [Profile: Per-Request Header Override](#p5-profile-per-request-header-override) | `x-ginny-profile` header routes single request to non-active profile | - |
 | P6 | [Profile: Session Isolation](#p6-profile-session-isolation) | Same messages on different profiles get separate SDK sessions (no cross-contamination) | - |
 | P7 | [Profile: Invalid Profile Rejection](#p7-profile-invalid-profile-rejection) | Switching to nonexistent profile returns 400; invalid persisted profile falls back safely | - |
-| P8 | [Profile: Settings Persistence](#p8-profile-settings-persistence) | `settings.json` updated on switch; CLI `meridian profile list` reflects state | - |
+| P8 | [Profile: Settings Persistence](#p8-profile-settings-persistence) | `settings.json` updated on switch; CLI `ginny profile list` reflects state | - |
 | P9 | [Profile: Health Reflects Active](#p9-profile-health-reflects-active) | `/health` email changes when active profile changes | - |
 | P10 | [Profile: Telemetry Records After Switch](#p10-profile-telemetry-records-after-switch) | Requests on both profiles appear in `/telemetry/requests` | - |
 
@@ -117,7 +117,7 @@ cat /tmp/proxy-e2e.log | strings | grep "\[PROXY\]" | tail -5
 **Cleanup.** Each test section is independent. Kill the proxy and clear the session store between sections if you need isolation:
 ```bash
 kill $(lsof -ti :3456) 2>/dev/null
-rm -f ~/.cache/meridian/sessions.json
+rm -f ~/.cache/ginny/sessions.json
 ```
 
 ---
@@ -363,7 +363,7 @@ curl -s http://127.0.0.1:3456/v1/messages \
 
 ## E8: Cross-Proxy Resume
 
-**Verifies:** Sessions survive proxy restart via the shared file store (`~/.cache/meridian/sessions.json`).
+**Verifies:** Sessions survive proxy restart via the shared file store (`~/.cache/ginny/sessions.json`).
 
 ```bash
 # Step 1: Create a session
@@ -379,7 +379,7 @@ curl -s http://127.0.0.1:3456/v1/messages \
   }' > /dev/null
 
 # Verify stored in file
-cat ~/.cache/meridian/sessions.json | python3 -m json.tool | grep -A3 "e2e-persist"
+cat ~/.cache/ginny/sessions.json | python3 -m json.tool | grep -A3 "e2e-persist"
 
 # Step 2: Kill and restart proxy (in-memory caches wiped)
 kill $(lsof -ti :3456); sleep 2
@@ -513,7 +513,7 @@ curl -s http://127.0.0.1:3456/telemetry/logs?limit=5 | python3 -m json.tool | he
 ```
 
 **Pass criteria:**
-- `/telemetry` returns HTML with `<title>Meridian`
+- `/telemetry` returns HTML with `<title>Ginny`
 - `/telemetry/requests` returns an array of request metrics with `requestId`, `model`, `lineageType`
 - `/telemetry/summary` returns `totalRequests > 0`, `errorCount`, percentile latencies
 - `/telemetry/logs` returns an array with `level`, `category`, `message` fields
@@ -828,12 +828,12 @@ ANTHROPIC_API_KEY=should-be-stripped ANTHROPIC_BASE_URL=http://should-be-strippe
 
 ## E21: Session Store Pruning
 
-**Verifies:** The file-based session store (`~/.cache/meridian/sessions.json`) evicts the oldest entries when the count exceeds `CLAUDE_PROXY_MAX_STORED_SESSIONS`.
+**Verifies:** The file-based session store (`~/.cache/ginny/sessions.json`) evicts the oldest entries when the count exceeds `CLAUDE_PROXY_MAX_STORED_SESSIONS`.
 
 **Requires proxy restart with env var:**
 ```bash
 kill $(lsof -ti :3456) 2>/dev/null; sleep 1
-rm -f ~/.cache/meridian/sessions.json
+rm -f ~/.cache/ginny/sessions.json
 CLAUDE_PROXY_PORT=3456 CLAUDE_PROXY_MAX_STORED_SESSIONS=3 bun run ./bin/cli.ts > /tmp/proxy-e2e.log 2>&1 &
 # Wait for ready...
 ```
@@ -850,7 +850,7 @@ for i in 1 2 3 4 5; do
 done
 
 # Verify the store is bounded
-cat ~/.cache/meridian/sessions.json | python3 -c "
+cat ~/.cache/ginny/sessions.json | python3 -c "
 import sys,json
 d=json.load(sys.stdin)
 print(f'Entries: {len(d)} (should be <= 3)')
@@ -985,7 +985,7 @@ curl -s -X POST http://127.0.0.1:3456/auth/refresh
 
 ## E23: Subagent Model Selection
 
-**Verifies:** When the `x-opencode-agent-mode: subagent` header is present, the proxy selects the base model (200k) instead of the 1M variant, conserving rate limit budget for the primary agent. The `meridian-agent-mode.ts` plugin sets this header automatically based on the agent's runtime `mode` field.
+**Verifies:** When the `x-opencode-agent-mode: subagent` header is present, the proxy selects the base model (200k) instead of the 1M variant, conserving rate limit budget for the primary agent. The `ginny-agent-mode.ts` plugin sets this header automatically based on the agent's runtime `mode` field.
 
 ### Part A — header routing (curl, no plugin needed)
 
@@ -1017,10 +1017,10 @@ curl -s http://127.0.0.1:3456/v1/messages \
 **Setup:**
 ```bash
 # 1. Copy the plugin into your project
-cp /path/to/meridian/examples/opencode-plugin/meridian-agent-mode.ts ./meridian-agent-mode.ts
+cp /path/to/ginny/examples/opencode-plugin/ginny-agent-mode.ts ./ginny-agent-mode.ts
 
 # 2. Add to opencode.json
-# { "plugin": ["./claude-max-headers.ts", "./meridian-agent-mode.ts"] }
+# { "plugin": ["./claude-max-headers.ts", "./ginny-agent-mode.ts"] }
 
 # 3. Create a named agent (e.g. ~/.config/opencode/agents/researcher.md)
 # The agent's frontmatter mode determines primary vs subagent
@@ -1039,7 +1039,7 @@ opencode run --model anthropic/claude-sonnet-4-6 \
 - Both requests succeed — no errors
 - Two distinct proxy log entries visible (parent + subagent turn)
 
-**What's being tested:** `mapModelToClaudeModel()` `agentMode` parameter in `models.ts`, `x-opencode-agent-mode` header reading in `server.ts`, and the `meridian-agent-mode.ts` plugin's use of `(incoming.agent as any).mode` to detect subagents without any API calls.
+**What's being tested:** `mapModelToClaudeModel()` `agentMode` parameter in `models.ts`, `x-opencode-agent-mode` header reading in `server.ts`, and the `ginny-agent-mode.ts` plugin's use of `(incoming.agent as any).mode` to detect subagents without any API calls.
 
 ---
 
@@ -1259,7 +1259,7 @@ echo "$CLAUDE_SESSION_ID"
 # 2. Query usage immediately (proves fingerprint-backed sessions are discoverable)
 curl -s http://127.0.0.1:3456/v1/sessions/$CLAUDE_SESSION_ID/context-usage | python3 -m json.tool
 
-# 3. Restart the proxy WITHOUT deleting ~/.cache/meridian/sessions.json
+# 3. Restart the proxy WITHOUT deleting ~/.cache/ginny/sessions.json
 kill $(lsof -ti :3456) 2>/dev/null
 sleep 2
 CLAUDE_PROXY_PORT=3456 bun run ./bin/cli.ts > /tmp/proxy-e2e.log 2>&1 &
@@ -1377,10 +1377,10 @@ import json
 with open('$HOME/.factory/settings.json') as f:
     s = json.load(f)
 s['customModels'] = [
-    {'model':'claude-sonnet-4-6',          'name':'Sonnet 4.6 (1M — Meridian)', 'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
-    {'model':'claude-opus-4-6',            'name':'Opus 4.6 (1M — Meridian)',   'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
-    {'model':'claude-haiku-4-5-20251001',  'name':'Haiku 4.5 (Meridian)',       'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
-    {'model':'claude-sonnet-4-5-20250929', 'name':'Sonnet 4.5 (Meridian)',      'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
+    {'model':'claude-sonnet-4-6',          'name':'Sonnet 4.6 (1M — Ginny)', 'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
+    {'model':'claude-opus-4-6',            'name':'Opus 4.6 (1M — Ginny)',   'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
+    {'model':'claude-haiku-4-5-20251001',  'name':'Haiku 4.5 (Ginny)',       'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
+    {'model':'claude-sonnet-4-5-20250929', 'name':'Sonnet 4.5 (Ginny)',      'provider':'anthropic','baseUrl':'http://127.0.0.1:3457','apiKey':'sk-proxy'},
 ]
 with open('$HOME/.factory/settings.json', 'w') as f:
     json.dump(s, f, indent=2)
@@ -1753,14 +1753,14 @@ These tests verify the Crush adapter. Crush connects via a provider entry in `~/
 
 ### Crush Provider Setup
 
-Add the `meridian` provider to `~/.config/crush/crush.json`:
+Add the `ginny` provider to `~/.config/crush/crush.json`:
 
 ```json
 {
   "providers": {
-    "meridian": {
-      "id": "meridian",
-      "name": "Meridian",
+    "ginny": {
+      "id": "ginny",
+      "name": "Ginny",
       "type": "anthropic",
       "base_url": "http://127.0.0.1:3456",
       "api_key": "dummy",
@@ -1797,10 +1797,10 @@ Add the `meridian` provider to `~/.config/crush/crush.json`:
 
 Verify Crush sees the models:
 ```bash
-crush models | grep meridian
-# → meridian/claude-haiku-4-5-20251001
-# → meridian/claude-opus-4-6
-# → meridian/claude-haiku-4-5-20251001
+crush models | grep ginny
+# → ginny/claude-haiku-4-5-20251001
+# → ginny/claude-opus-4-6
+# → ginny/claude-haiku-4-5-20251001
 ```
 
 ---
@@ -1811,7 +1811,7 @@ crush models | grep meridian
 
 ```bash
 crush run \
-  --model meridian/claude-haiku-4-5-20251001 \
+  --model ginny/claude-haiku-4-5-20251001 \
   --cwd /path/to/your/project \
   --quiet \
   "Respond with exactly: CRUSH_E2E_OK"
@@ -1831,14 +1831,14 @@ crush run \
 ```bash
 # Turn 1: establish session
 crush run \
-  --model meridian/claude-haiku-4-5-20251001 \
+  --model ginny/claude-haiku-4-5-20251001 \
   --cwd /path/to/your/project \
   --quiet \
   "Remember the code: CRUSH_CONT_99. Reply with 'stored'."
 
 # Turn 2: continue that session
 crush run \
-  --model meridian/claude-haiku-4-5-20251001 \
+  --model ginny/claude-haiku-4-5-20251001 \
   --cwd /path/to/your/project \
   --continue \
   --quiet \
@@ -1858,7 +1858,7 @@ crush run \
 
 ```bash
 crush run \
-  --model meridian/claude-haiku-4-5-20251001 \
+  --model ginny/claude-haiku-4-5-20251001 \
   --cwd /path/to/your/project \
   --quiet \
   "Use the ls tool to list the files in the current directory and show me the output"
@@ -1879,7 +1879,7 @@ crush run \
 
 ```bash
 crush run \
-  --model meridian/claude-haiku-4-5-20251001 \
+  --model ginny/claude-haiku-4-5-20251001 \
   --cwd /path/to/project \
   --quiet \
   "Write the text 'CRUSH_WRITE_OK' to /tmp/crush-write-test.txt"
@@ -1900,15 +1900,15 @@ rm /tmp/crush-write-test.txt
 
 ```bash
 # Sonnet 4.6 → sonnet[1m]
-crush run --model meridian/claude-sonnet-4-6 --quiet "Say: SONNET_OK" 2>/dev/null
+crush run --model ginny/claude-sonnet-4-6 --quiet "Say: SONNET_OK" 2>/dev/null
 # Proxy log: model=sonnet[1m]
 
 # Opus 4.6 → opus[1m]
-crush run --model meridian/claude-opus-4-6 --quiet "Say: OPUS_OK" 2>/dev/null
+crush run --model ginny/claude-opus-4-6 --quiet "Say: OPUS_OK" 2>/dev/null
 # Proxy log: model=opus[1m]
 
 # Haiku 4.5 → haiku
-crush run --model meridian/claude-haiku-4-5-20251001 --quiet "Say: HAIKU_OK" 2>/dev/null
+crush run --model ginny/claude-haiku-4-5-20251001 --quiet "Say: HAIKU_OK" 2>/dev/null
 # Proxy log: model=haiku
 ```
 
@@ -1925,7 +1925,7 @@ crush run --model meridian/claude-haiku-4-5-20251001 --quiet "Say: HAIKU_OK" 2>/
 
 ```bash
 # Fire all three agents in sequence
-crush run --model meridian/claude-haiku-4-5-20251001 --quiet "Say: CRUSH_COEXIST" 2>/dev/null
+crush run --model ginny/claude-haiku-4-5-20251001 --quiet "Say: CRUSH_COEXIST" 2>/dev/null
 
 curl -s http://127.0.0.1:3456/v1/messages \
   -H "Content-Type: application/json" \
@@ -2148,7 +2148,7 @@ cline --yolo --model claude-haiku-4-5-20251001 --timeout 20 --json "Say: OK" 2>/
 cline --yolo --model claude-haiku-4-5-20251001 --timeout 20 --json "Say: CLINE_COEXIST" 2>/dev/null | grep completion_result
 
 # Crush
-crush run --model meridian/claude-haiku-4-5-20251001 --quiet "Say: CRUSH_COEXIST" 2>/dev/null
+crush run --model ginny/claude-haiku-4-5-20251001 --quiet "Say: CRUSH_COEXIST" 2>/dev/null
 
 # OpenCode (curl)
 curl -s http://127.0.0.1:3456/v1/messages \
@@ -2170,7 +2170,7 @@ curl -s http://127.0.0.1:3456/v1/messages \
 
 These tests verify the PostToolUse hook that tracks file write/edit operations and appends a "Files changed" summary to responses. This feature is **internal mode only** — passthrough mode forwards tools to the client, so the proxy never sees tool execution results.
 
-**Requires:** Proxy running in internal mode (no `MERIDIAN_PASSTHROUGH` env var). Use a separate port if your default service runs in passthrough mode.
+**Requires:** Proxy running in internal mode (no `GINNY_PASSTHROUGH` env var). Use a separate port if your default service runs in passthrough mode.
 
 ```bash
 kill $(lsof -ti :3457) 2>/dev/null; sleep 1
@@ -2405,7 +2405,7 @@ Verifies that Claude's `thinking` content blocks and the SDK's internal Turn 2 p
 
 ```bash
 # Proxy must be running in passthrough mode
-MERIDIAN_PASSTHROUGH=1 MERIDIAN_PORT=3457 npm start &
+GINNY_PASSTHROUGH=1 GINNY_PORT=3457 npm start &
 sleep 3
 curl -s http://127.0.0.1:3457/health | jq .mode   # → "passthrough"
 
@@ -2508,7 +2508,7 @@ kill $(lsof -ti :3457) 2>/dev/null
 
 ## Profile Tests
 
-**Prerequisites:** Two profiles configured in `~/.config/meridian/profiles.json` with valid auth. Example:
+**Prerequisites:** Two profiles configured in `~/.config/ginny/profiles.json` with valid auth. Example:
 ```json
 [
   {"id": "personal", "claudeConfigDir": "/Users/you/.claude"},
@@ -2518,16 +2518,16 @@ kill $(lsof -ti :3457) 2>/dev/null
 
 Both must pass `claude auth status` with `loggedIn: true` under their respective `CLAUDE_CONFIG_DIR`.
 
-Proxy must be running with disk profile discovery (no `MERIDIAN_PROFILES` env var — let it auto-discover from the JSON file).
+Proxy must be running with disk profile discovery (no `GINNY_PROFILES` env var — let it auto-discover from the JSON file).
 
 ### Setup
 
 ```bash
 # Verify both profiles are authenticated
-PROFILE1_DIR=$(python3 -c "import json; print(json.load(open('$HOME/.config/meridian/profiles.json'))[0]['claudeConfigDir'])")
-PROFILE2_DIR=$(python3 -c "import json; print(json.load(open('$HOME/.config/meridian/profiles.json'))[1]['claudeConfigDir'])")
-PROFILE1_ID=$(python3 -c "import json; print(json.load(open('$HOME/.config/meridian/profiles.json'))[0]['id'])")
-PROFILE2_ID=$(python3 -c "import json; print(json.load(open('$HOME/.config/meridian/profiles.json'))[1]['id'])")
+PROFILE1_DIR=$(python3 -c "import json; print(json.load(open('$HOME/.config/ginny/profiles.json'))[0]['claudeConfigDir'])")
+PROFILE2_DIR=$(python3 -c "import json; print(json.load(open('$HOME/.config/ginny/profiles.json'))[1]['claudeConfigDir'])")
+PROFILE1_ID=$(python3 -c "import json; print(json.load(open('$HOME/.config/ginny/profiles.json'))[0]['id'])")
+PROFILE2_ID=$(python3 -c "import json; print(json.load(open('$HOME/.config/ginny/profiles.json'))[1]['id'])")
 
 CLAUDE_CONFIG_DIR=$PROFILE1_DIR claude auth status | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['loggedIn'], f'{d}'; print(f'Profile 1 ({d[\"email\"]}): OK')"
 CLAUDE_CONFIG_DIR=$PROFILE2_DIR claude auth status | python3 -c "import json,sys; d=json.load(sys.stdin); assert d['loggedIn'], f'{d}'; print(f'Profile 2 ({d[\"email\"]}): OK')"
@@ -2622,12 +2622,12 @@ curl -s -X POST http://127.0.0.1:3456/profiles/active \
   -H "Content-Type: application/json" -d "{\"profile\":\"$PROFILE2_ID\"}" > /dev/null
 
 # Verify settings.json
-SAVED=$(python3 -c "import json; print(json.load(open('$HOME/.config/meridian/settings.json'))['activeProfile'])")
+SAVED=$(python3 -c "import json; print(json.load(open('$HOME/.config/ginny/settings.json'))['activeProfile'])")
 test "$SAVED" = "$PROFILE2_ID" && echo "PASS: settings.json=$SAVED" || echo "FAIL: expected $PROFILE2_ID, got $SAVED"
 
 # Restart proxy (adjust for your setup — launchd, systemd, or manual)
 kill $(lsof -ti :3456) 2>/dev/null; sleep 1
-MERIDIAN_PORT=3456 bun run ./bin/cli.ts &
+GINNY_PORT=3456 bun run ./bin/cli.ts &
 sleep 3
 
 # Verify profile restored
@@ -2691,7 +2691,7 @@ test -n "$LOG_P1" && test -n "$LOG_P2" && echo "PASS: both profiles handled requ
 
 ## P5: Profile Per-Request Header Override
 
-**Verifies:** `x-meridian-profile` header routes a single request to a different profile without changing the active profile.
+**Verifies:** `x-ginny-profile` header routes a single request to a different profile without changing the active profile.
 
 ```bash
 PROFILE1_ID=$(curl -s http://127.0.0.1:3456/profiles/list | python3 -c "import json,sys; print(json.load(sys.stdin)['profiles'][0]['id'])")
@@ -2704,7 +2704,7 @@ curl -s -X POST http://127.0.0.1:3456/profiles/active \
 # Send request with header override to profile 2
 curl -sf -X POST http://127.0.0.1:3456/v1/messages \
   -H "Content-Type: application/json" -H "x-api-key: dummy" \
-  -H "x-meridian-profile: $PROFILE2_ID" \
+  -H "x-ginny-profile: $PROFILE2_ID" \
   -d '{"model":"claude-haiku-4-5-20251001","max_tokens":10,"stream":false,
        "messages":[{"role":"user","content":"say ok"}]}' > /dev/null \
   && echo "PASS: header override request succeeded" || echo "FAIL: request failed"
@@ -2768,11 +2768,11 @@ STATUS=$(echo "$RES" | python3 -c "import json,sys; print('error' if 'error' in 
 test "$STATUS" = "error" && echo "PASS: nonexistent profile rejected" || echo "FAIL: expected error, got $RES"
 
 # Write invalid profile to settings.json, restart, verify fallback
-ORIG=$(cat ~/.config/meridian/settings.json)
-echo '{"activeProfile":"does_not_exist_abc"}' > ~/.config/meridian/settings.json
+ORIG=$(cat ~/.config/ginny/settings.json)
+echo '{"activeProfile":"does_not_exist_abc"}' > ~/.config/ginny/settings.json
 
 kill $(lsof -ti :3456) 2>/dev/null; sleep 1
-MERIDIAN_PORT=3456 bun run ./bin/cli.ts &
+GINNY_PORT=3456 bun run ./bin/cli.ts &
 sleep 3
 
 # Should fall back to first profile, not crash
@@ -2781,7 +2781,7 @@ HEALTH=$(curl -s http://127.0.0.1:3456/health | python3 -c "import json,sys; pri
 test "$HEALTH" = "healthy" && echo "PASS: proxy healthy after invalid profile (active=$ACTIVE)" || echo "FAIL: proxy unhealthy"
 
 # Restore
-echo "$ORIG" > ~/.config/meridian/settings.json
+echo "$ORIG" > ~/.config/ginny/settings.json
 ```
 
 **Pass criteria:**
@@ -2792,7 +2792,7 @@ echo "$ORIG" > ~/.config/meridian/settings.json
 
 ## P8: Profile Settings Persistence
 
-**Verifies:** `settings.json` is updated when profile is switched; CLI `meridian profile list` shows correct state.
+**Verifies:** `settings.json` is updated when profile is switched; CLI `ginny profile list` shows correct state.
 
 ```bash
 PROFILE2_ID=$(curl -s http://127.0.0.1:3456/profiles/list | python3 -c "import json,sys; print(json.load(sys.stdin)['profiles'][1]['id'])")
@@ -2802,16 +2802,16 @@ curl -s -X POST http://127.0.0.1:3456/profiles/active \
   -H "Content-Type: application/json" -d "{\"profile\":\"$PROFILE2_ID\"}" > /dev/null
 
 # Verify settings.json
-SAVED=$(python3 -c "import json; print(json.load(open('$HOME/.config/meridian/settings.json'))['activeProfile'])")
+SAVED=$(python3 -c "import json; print(json.load(open('$HOME/.config/ginny/settings.json'))['activeProfile'])")
 test "$SAVED" = "$PROFILE2_ID" && echo "PASS: settings.json=$SAVED" || echo "FAIL: expected $PROFILE2_ID, got $SAVED"
 
 # Verify CLI shows profiles (non-interactive, just list)
-meridian profile list 2>&1 | grep -q "$PROFILE2_ID" && echo "PASS: CLI shows profile" || echo "FAIL: CLI missing profile"
+ginny profile list 2>&1 | grep -q "$PROFILE2_ID" && echo "PASS: CLI shows profile" || echo "FAIL: CLI missing profile"
 ```
 
 **Pass criteria:**
 - `settings.json` contains the switched profile ID
-- `meridian profile list` output includes the profile
+- `ginny profile list` output includes the profile
 
 ---
 

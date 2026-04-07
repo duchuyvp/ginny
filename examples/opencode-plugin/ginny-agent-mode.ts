@@ -1,8 +1,8 @@
 /**
- * OpenCode plugin — subagent model selection for Meridian.
+ * OpenCode plugin — subagent model selection for Ginny.
  *
  * Sends an x-opencode-agent-mode header with every Anthropic API request so
- * Meridian can pick the right context window tier:
+ * Ginny can pick the right context window tier:
  *
  *   - Primary agents  → sonnet[1m] / opus[1m]  (full 1M context)
  *   - Subagents       → sonnet / opus           (200k, saves rate limit budget)
@@ -12,10 +12,10 @@
  * `agent` as `string`. We read .mode directly — no API calls needed.
  *
  * Usage — add to opencode.json:
- *   { "plugin": ["./meridian-agent-mode.ts"] }
+ *   { "plugin": ["./ginny-agent-mode.ts"] }
  *
  * Or combine with the session headers plugin:
- *   { "plugin": ["./claude-max-headers.ts", "./meridian-agent-mode.ts"] }
+ *   { "plugin": ["./claude-max-headers.ts", "./ginny-agent-mode.ts"] }
  */
 
 type Plugin = (input: any) => Promise<{
@@ -31,7 +31,7 @@ type Plugin = (input: any) => Promise<{
   ) => Promise<void>
 }>
 
-const MeridianAgentModePlugin: Plugin = async () => {
+const GinnyAgentModePlugin: Plugin = async () => {
   return {
     "chat.headers": async (incoming, output) => {
       if (incoming.model.providerID !== "anthropic") return
@@ -47,4 +47,4 @@ const MeridianAgentModePlugin: Plugin = async () => {
   }
 }
 
-export default MeridianAgentModePlugin
+export default GinnyAgentModePlugin

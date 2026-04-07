@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="Meridian" width="800"/>
+  <img src="assets/banner.svg" alt="Ginny" width="800"/>
 </p>
 
 <p align="center">
-  <a href="https://github.com/rynfar/meridian/releases"><img src="https://img.shields.io/github/v/release/rynfar/meridian?style=flat-square&color=6366f1&label=release" alt="Release"></a>
-  <a href="https://www.npmjs.com/package/@rynfar/meridian"><img src="https://img.shields.io/npm/v/@rynfar/meridian?style=flat-square&color=8b5cf6&label=npm" alt="npm"></a>
+  <a href="https://github.com/rynfar/ginny/releases"><img src="https://img.shields.io/github/v/release/rynfar/ginny?style=flat-square&color=6366f1&label=release" alt="Release"></a>
+  <a href="https://www.npmjs.com/package/ginny"><img src="https://img.shields.io/npm/v/ginny?style=flat-square&color=8b5cf6&label=npm" alt="npm"></a>
   <a href="#"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-a78bfa?style=flat-square" alt="Platform"></a>
   <a href="#"><img src="https://img.shields.io/badge/license-MIT-c4b5fd?style=flat-square" alt="License"></a>
   <a href="https://discord.gg/7vNVFYBz"><img src="https://img.shields.io/badge/discord-join-5865F2?style=flat-square&logo=discord&logoColor=white" alt="Discord"></a>
@@ -12,60 +12,60 @@
 
 ---
 
-Meridian bridges the Claude Code SDK to the standard Anthropic API. No OAuth interception. No binary patches. No hacks. Just pure, documented SDK calls. Any tool that speaks the Anthropic or OpenAI protocol — OpenCode, Crush, Cline, Aider, Pi, Droid, Open WebUI — connects to Meridian and gets Claude, with session management, streaming, and prompt caching handled natively by the SDK.
+Ginny bridges the Claude Code SDK to the standard Anthropic API. No OAuth interception. No binary patches. No hacks. Just pure, documented SDK calls. Any tool that speaks the Anthropic or OpenAI protocol — OpenCode, Crush, Cline, Aider, Pi, Droid, Open WebUI — connects to Ginny and gets Claude, with session management, streaming, and prompt caching handled natively by the SDK.
 
 > [!NOTE]
-> ### How Meridian works with Anthropic
+> ### How Ginny works with Anthropic
 >
-> Meridian is built entirely on the [Claude Code SDK](https://docs.anthropic.com/en/docs/claude-code/sdk). Every request flows through `query()` — the same documented function Anthropic provides for programmatic access. No OAuth tokens are extracted, no binaries are patched, nothing is reverse-engineered.
+> Ginny is built entirely on the [Claude Code SDK](https://docs.anthropic.com/en/docs/claude-code/sdk). Every request flows through `query()` — the same documented function Anthropic provides for programmatic access. No OAuth tokens are extracted, no binaries are patched, nothing is reverse-engineered.
 >
-> Because we use the SDK, Anthropic remains in full control of prompt caching, context window management, compaction, rate limiting, and authentication. Meridian doesn't bypass these mechanisms — it depends on them. Max subscription tokens flow through the correct channel, governed by the same guardrails Anthropic built into Claude Code.
+> Because we use the SDK, Anthropic remains in full control of prompt caching, context window management, compaction, rate limiting, and authentication. Ginny doesn't bypass these mechanisms — it depends on them. Max subscription tokens flow through the correct channel, governed by the same guardrails Anthropic built into Claude Code.
 >
-> What Meridian adds is a **presentation and interoperability layer**. We translate Claude Code's output into the standard Anthropic API format so developers can connect the editors, terminals, and workflows they prefer. The SDK does the work; Meridian formats the result.
+> What Ginny adds is a **presentation and interoperability layer**. We translate Claude Code's output into the standard Anthropic API format so developers can connect the editors, terminals, and workflows they prefer. The SDK does the work; Ginny formats the result.
 >
 > If you're looking for a tool that circumvents usage limits or bypasses Anthropic's controls, this project is not for you. We play nice with the SDK because we believe that's how developers can continue to choose their own frontends while respecting Anthropic's platform.
 
 > [!WARNING]
-> ### Why Meridian does not support OpenClaw
+> ### Why Ginny does not support OpenClaw
 >
-> There is technically a way to make Meridian work with OpenClaw, but we're not interested in pursuing it.
+> There is technically a way to make Ginny work with OpenClaw, but we're not interested in pursuing it.
 >
 > The reason Claude Max offers generous usage limits is because Anthropic can justify it through Claude Code — their harness, their optimizations, their control. OpenClaw blows through that with autonomous workflows that Anthropic has little ability to manage or optimize. Using Opus to check an email when a local model would handle it fine isn't efficient use — it's waste that degrades the plan for everyone.
 >
-> I built Meridian because I believe developers should have the right to use the frontend of their choice. But that right comes with a responsibility: don't wreck the subscription for the rest of us. Sloppy autonomous agents that burn through Claude Max tokens are directly counter-productive to developers like me who depend on the plan being sustainable.
+> I built Ginny because I believe developers should have the right to use the frontend of their choice. But that right comes with a responsibility: don't wreck the subscription for the rest of us. Sloppy autonomous agents that burn through Claude Max tokens are directly counter-productive to developers like me who depend on the plan being sustainable.
 >
-> Meridian's philosophy is simple — play nice with the SDK, let Anthropic optimize how they see fit, and use the frontend you want within the constraints of Claude Code. OpenClaw is not just a frontend; it's an autonomous system that abuses the Max plan. We won't be supporting it.
+> Ginny's philosophy is simple — play nice with the SDK, let Anthropic optimize how they see fit, and use the frontend you want within the constraints of Claude Code. OpenClaw is not just a frontend; it's an autonomous system that abuses the Max plan. We won't be supporting it.
 
 ## Quick Start
 
 ```bash
 # 1. Install
-npm install -g @rynfar/meridian
+npm install -g ginny
 
 # 2. Authenticate (one time)
 claude login
 
 # 3. Configure OpenCode plugin (one time — OpenCode users only)
-meridian setup
+ginny setup
 
 # 4. Start
-meridian
+ginny
 ```
 
-Meridian runs on `http://127.0.0.1:3456`. Point any Anthropic-compatible tool at it:
+Ginny runs on `http://127.0.0.1:3456`. Point any Anthropic-compatible tool at it:
 
 ```bash
 ANTHROPIC_API_KEY=x ANTHROPIC_BASE_URL=http://127.0.0.1:3456 opencode
 ```
 
-The API key value is a placeholder — Meridian authenticates through the Claude Code SDK, not API keys. Most Anthropic-compatible tools require this field to be set, but any value works.
+The API key value is a placeholder — Ginny authenticates through the Claude Code SDK, not API keys. Most Anthropic-compatible tools require this field to be set, but any value works.
 
-## Why Meridian?
+## Why Ginny?
 
-The Claude Code SDK provides programmatic access to Claude. But your favorite coding tools expect an Anthropic API endpoint. Meridian bridges that gap — it runs locally, accepts standard API requests, and routes them through the SDK. Claude Code does the heavy lifting; Meridian translates the output.
+The Claude Code SDK provides programmatic access to Claude. But your favorite coding tools expect an Anthropic API endpoint. Ginny bridges that gap — it runs locally, accepts standard API requests, and routes them through the SDK. Claude Code does the heavy lifting; Ginny translates the output.
 
 <p align="center">
-  <img src="assets/how-it-works.svg" alt="How Meridian works" width="920"/>
+  <img src="assets/how-it-works.svg" alt="How Ginny works" width="920"/>
 </p>
 
 ## Features
@@ -84,17 +84,17 @@ The Claude Code SDK provides programmatic access to Claude. But your favorite co
 
 ## Multi-Profile Support
 
-Meridian can route requests to different Claude accounts. Each **profile** is a named auth context — a separate Claude login with its own OAuth tokens. Switch between personal and work accounts, or share a single Meridian instance across teams.
+Ginny can route requests to different Claude accounts. Each **profile** is a named auth context — a separate Claude login with its own OAuth tokens. Switch between personal and work accounts, or share a single Ginny instance across teams.
 
 ### Adding profiles
 
 ```bash
 # Add your personal account
-meridian profile add personal
+ginny profile add personal
 # → Opens browser for Claude login
 
 # Add your work account (sign out of claude.ai first, then sign into the work account)
-meridian profile add work
+ginny profile add work
 ```
 
 > **⚠ Important:** Claude's OAuth reuses your browser session. Before adding a second account, sign out of claude.ai and sign into the other account first.
@@ -103,10 +103,10 @@ meridian profile add work
 
 ```bash
 # CLI (while proxy is running)
-meridian profile switch work
+ginny profile switch work
 
 # Per-request header (any agent)
-curl -H "x-meridian-profile: work" ...
+curl -H "x-ginny-profile: work" ...
 ```
 
 You can also switch profiles from the web UI at `http://127.0.0.1:3456/profiles` — a dropdown appears in the nav bar on all pages when profiles are configured.
@@ -115,18 +115,18 @@ You can also switch profiles from the web UI at `http://127.0.0.1:3456/profiles`
 
 | Command | Description |
 |---------|-------------|
-| `meridian profile add <name>` | Add a profile and authenticate via browser |
-| `meridian profile list` | List profiles and auth status |
-| `meridian profile switch <name>` | Switch the active profile (requires running proxy) |
-| `meridian profile login <name>` | Re-authenticate an expired profile |
-| `meridian profile remove <name>` | Remove a profile and its credentials |
+| `ginny profile add <name>` | Add a profile and authenticate via browser |
+| `ginny profile list` | List profiles and auth status |
+| `ginny profile switch <name>` | Switch the active profile (requires running proxy) |
+| `ginny profile login <name>` | Re-authenticate an expired profile |
+| `ginny profile remove <name>` | Remove a profile and its credentials |
 
 ### How it works
 
-Each profile stores its credentials in an isolated `CLAUDE_CONFIG_DIR` under `~/.config/meridian/profiles/<name>/`. When a request arrives, Meridian resolves the profile in priority order:
+Each profile stores its credentials in an isolated `CLAUDE_CONFIG_DIR` under `~/.config/ginny/profiles/<name>/`. When a request arrives, Ginny resolves the profile in priority order:
 
-1. `x-meridian-profile` request header (per-request override)
-2. Active profile (set via `meridian profile switch` or the web UI)
+1. `x-ginny-profile` request header (per-request override)
+2. Active profile (set via `ginny profile switch` or the web UI)
 3. First configured profile
 
 Session state is scoped per profile — switching accounts won't cross-contaminate conversation history.
@@ -136,30 +136,30 @@ Session state is scoped per profile — switching accounts won't cross-contamina
 For advanced setups (CI, Docker), profiles can also be provided via environment variable:
 
 ```bash
-export MERIDIAN_PROFILES='[{"id":"personal","claudeConfigDir":"/path/to/config1"},{"id":"work","claudeConfigDir":"/path/to/config2"}]'
-export MERIDIAN_DEFAULT_PROFILE=personal
-meridian
+export GINNY_PROFILES='[{"id":"personal","claudeConfigDir":"/path/to/config1"},{"id":"work","claudeConfigDir":"/path/to/config2"}]'
+export GINNY_DEFAULT_PROFILE=personal
+ginny
 ```
 
-When `MERIDIAN_PROFILES` is set, it takes precedence over disk-configured profiles. When unset, Meridian auto-discovers profiles from `~/.config/meridian/profiles.json` on each request.
+When `GINNY_PROFILES` is set, it takes precedence over disk-configured profiles. When unset, Ginny auto-discovers profiles from `~/.config/ginny/profiles.json` on each request.
 
 ## Agent Setup
 
 ### OpenCode
 
-**Step 1: Run `meridian setup` (required, one time)**
+**Step 1: Run `ginny setup` (required, one time)**
 
 ```bash
-meridian setup
+ginny setup
 ```
 
-This adds the Meridian plugin to your OpenCode global config (`~/.config/opencode/opencode.json`). The plugin enables:
+This adds the Ginny plugin to your OpenCode global config (`~/.config/opencode/opencode.json`). The plugin enables:
 
 - **Session tracking** — reliable conversation continuity across requests
 - **Safe model defaults** — Opus uses 1M context (included with Max subscription); Sonnet uses 200k to avoid Extra Usage charges ([details](#extended-context-billing))
 - **Subagent model selection** — subagents automatically use `sonnet`/`opus` (200k), preserving rate-limit budget
 
-If the plugin is missing, Meridian warns at startup and reports `"plugin": "not-configured"` in the health endpoint.
+If the plugin is missing, Ginny warns at startup and reports `"plugin": "not-configured"` in the health endpoint.
 
 **Step 2: Start**
 
@@ -181,9 +181,9 @@ Add a provider to `~/.config/crush/crush.json`:
 ```json
 {
   "providers": {
-    "meridian": {
-      "id": "meridian",
-      "name": "Meridian",
+    "ginny": {
+      "id": "ginny",
+      "name": "Ginny",
       "type": "anthropic",
       "base_url": "http://127.0.0.1:3456",
       "api_key": "dummy",
@@ -198,22 +198,22 @@ Add a provider to `~/.config/crush/crush.json`:
 ```
 
 ```bash
-crush run --model meridian/claude-sonnet-4-6 "refactor this function"
-crush --model meridian/claude-opus-4-6       # interactive TUI
+crush run --model ginny/claude-sonnet-4-6 "refactor this function"
+crush --model ginny/claude-opus-4-6       # interactive TUI
 ```
 
 Crush is automatically detected from its `Charm-Crush/` User-Agent — no plugin needed.
 
 ### Droid (Factory AI)
 
-Add Meridian as a custom model provider in `~/.factory/settings.json`:
+Add Ginny as a custom model provider in `~/.factory/settings.json`:
 
 ```json
 {
   "customModels": [
-    { "model": "claude-sonnet-4-6",       "name": "Sonnet 4.6 (Meridian)", "provider": "anthropic", "baseUrl": "http://127.0.0.1:3456", "apiKey": "x" },
-    { "model": "claude-opus-4-6",         "name": "Opus 4.6 (Meridian)",   "provider": "anthropic", "baseUrl": "http://127.0.0.1:3456", "apiKey": "x" },
-    { "model": "claude-haiku-4-5-20251001", "name": "Haiku 4.5 (Meridian)", "provider": "anthropic", "baseUrl": "http://127.0.0.1:3456", "apiKey": "x" }
+    { "model": "claude-sonnet-4-6",       "name": "Sonnet 4.6 (Ginny)", "provider": "anthropic", "baseUrl": "http://127.0.0.1:3456", "apiKey": "x" },
+    { "model": "claude-opus-4-6",         "name": "Opus 4.6 (Ginny)",   "provider": "anthropic", "baseUrl": "http://127.0.0.1:3456", "apiKey": "x" },
+    { "model": "claude-haiku-4-5-20251001", "name": "Haiku 4.5 (Ginny)", "provider": "anthropic", "baseUrl": "http://127.0.0.1:3456", "apiKey": "x" }
   ]
 }
 ```
@@ -257,7 +257,7 @@ ANTHROPIC_API_KEY=x ANTHROPIC_BASE_URL=http://127.0.0.1:3456 \
 
 ### OpenAI-compatible tools (Open WebUI, Continue, etc.)
 
-Meridian speaks the OpenAI protocol natively — no LiteLLM or translation proxy needed.
+Ginny speaks the OpenAI protocol natively — no LiteLLM or translation proxy needed.
 
 **`POST /v1/chat/completions`** — accepts OpenAI chat format, returns OpenAI completion format (streaming and non-streaming)
 
@@ -271,7 +271,7 @@ Point any OpenAI-compatible tool at `http://127.0.0.1:3456` with any API key val
 # Any OpenAI SDK: set base_url="http://127.0.0.1:3456", api_key="dummy"
 ```
 
-> **Note:** Multi-turn conversations work by packing prior turns into the system prompt. Each request is a fresh SDK session — OpenAI clients replay full history themselves and don't use Meridian's session resumption.
+> **Note:** Multi-turn conversations work by packing prior turns into the system prompt. Each request is a fresh SDK session — OpenAI clients replay full history themselves and don't use Ginny's session resumption.
 
 ### Pi
 
@@ -285,13 +285,13 @@ Pi uses the `@mariozechner/pi-ai` library which supports a configurable `baseUrl
 }
 ```
 
-Then start Meridian with the pi default adapter:
+Then start Ginny with the pi default adapter:
 
 ```bash
-MERIDIAN_DEFAULT_AGENT=pi meridian
+GINNY_DEFAULT_AGENT=pi ginny
 ```
 
-Pi mimics Claude Code's User-Agent, so automatic detection isn't possible. The `MERIDIAN_DEFAULT_AGENT` env var tells Meridian to use the pi adapter for all unrecognized requests. If you run other agents alongside pi, use the `x-meridian-agent: pi` header instead (requires pi-ai support for custom headers).
+Pi mimics Claude Code's User-Agent, so automatic detection isn't possible. The `GINNY_DEFAULT_AGENT` env var tells Ginny to use the pi adapter for all unrecognized requests. If you run other agents alongside pi, use the `x-ginny-agent: pi` header instead (requires pi-ai support for custom headers).
 
 ### Any Anthropic-compatible tool
 
@@ -304,16 +304,16 @@ export ANTHROPIC_BASE_URL=http://127.0.0.1:3456
 
 | Agent | Status | Notes |
 |-------|--------|-------|
-| [OpenCode](https://github.com/anomalyco/opencode) | ✅ Verified | Requires `meridian setup` — full tool support, session resume, streaming, subagents |
+| [OpenCode](https://github.com/anomalyco/opencode) | ✅ Verified | Requires `ginny setup` — full tool support, session resume, streaming, subagents |
 | [Droid (Factory AI)](https://factory.ai/product/ide) | ✅ Verified | BYOK config (see above) — full tool support, session resume, streaming |
 | [Crush](https://github.com/charmbracelet/crush) | ✅ Verified | Provider config (see above) — full tool support, session resume, headless `crush run` |
 | [Cline](https://github.com/cline/cline) | ✅ Verified | Config (see above) — full tool support, file read/write/edit, bash, session resume |
 | [Aider](https://github.com/paul-gauthier/aider) | ✅ Verified | Env vars — file editing, streaming; `--no-stream` broken (litellm bug) |
 | [Open WebUI](https://github.com/open-webui/open-webui) | ✅ Verified | OpenAI-compatible endpoints — set base URL to `http://127.0.0.1:3456` |
-| [Pi](https://github.com/mariozechner/pi-coding-agent) | ✅ Verified | models.json config (see above) — requires `MERIDIAN_DEFAULT_AGENT=pi` |
+| [Pi](https://github.com/mariozechner/pi-coding-agent) | ✅ Verified | models.json config (see above) — requires `GINNY_DEFAULT_AGENT=pi` |
 | [Continue](https://github.com/continuedev/continue) | 🔲 Untested | OpenAI-compatible endpoints should work — set `apiBase` to `http://127.0.0.1:3456` |
 
-Tested an agent or built a plugin? [Open an issue](https://github.com/rynfar/meridian/issues) and we'll add it.
+Tested an agent or built a plugin? [Open an issue](https://github.com/rynfar/ginny/issues) and we'll add it.
 
 ## Architecture
 
@@ -347,7 +347,7 @@ telemetry/
 ├── profileBar.ts          ← Shared profile switcher bar
 └── profilePage.ts         ← Profile management page
 plugin/
-└── meridian.ts            ← OpenCode plugin (session headers + agent mode)
+└── ginny.ts            ← OpenCode plugin (session headers + agent mode)
 ```
 
 ### Session Management
@@ -361,7 +361,7 @@ Every incoming request is classified:
 | **Undo** | User rolled back messages | Fork at rollback point |
 | **Diverged** | Completely different conversation | Start fresh |
 
-Sessions are stored in-memory (LRU) and persisted to `~/.cache/meridian/sessions.json` for cross-proxy resume.
+Sessions are stored in-memory (LRU) and persisted to `~/.cache/ginny/sessions.json` for cross-proxy resume.
 
 ### Agent Detection
 
@@ -369,11 +369,11 @@ Agents are identified from request headers automatically:
 
 | Signal | Adapter |
 |---|---|
-| `x-meridian-agent` header | Explicit override (any adapter) |
+| `x-ginny-agent` header | Explicit override (any adapter) |
 | `Charm-Crush/` User-Agent | Crush |
 | `factory-cli/` User-Agent | Droid |
 | `litellm/` UA or `x-litellm-*` headers | LiteLLM passthrough |
-| *(anything else)* | `MERIDIAN_DEFAULT_AGENT` env var, or OpenCode |
+| *(anything else)* | `GINNY_DEFAULT_AGENT` env var, or OpenCode |
 
 ### Adding a New Agent
 
@@ -383,20 +383,20 @@ Implement the `AgentAdapter` interface in `src/proxy/adapters/`. See [`adapters/
 
 | Variable | Alias | Default | Description |
 |----------|-------|---------|-------------|
-| `MERIDIAN_PORT` | `CLAUDE_PROXY_PORT` | `3456` | Port to listen on |
-| `MERIDIAN_HOST` | `CLAUDE_PROXY_HOST` | `127.0.0.1` | Host to bind to |
-| `MERIDIAN_PASSTHROUGH` | `CLAUDE_PROXY_PASSTHROUGH` | unset | Forward tool calls to client instead of executing |
-| `MERIDIAN_MAX_CONCURRENT` | `CLAUDE_PROXY_MAX_CONCURRENT` | `10` | Maximum concurrent SDK sessions |
-| `MERIDIAN_MAX_SESSIONS` | `CLAUDE_PROXY_MAX_SESSIONS` | `1000` | In-memory LRU session cache size |
-| `MERIDIAN_MAX_STORED_SESSIONS` | `CLAUDE_PROXY_MAX_STORED_SESSIONS` | `10000` | File-based session store capacity |
-| `MERIDIAN_WORKDIR` | `CLAUDE_PROXY_WORKDIR` | `cwd()` | Default working directory for SDK |
-| `MERIDIAN_IDLE_TIMEOUT_SECONDS` | `CLAUDE_PROXY_IDLE_TIMEOUT_SECONDS` | `120` | HTTP keep-alive timeout |
-| `MERIDIAN_TELEMETRY_SIZE` | `CLAUDE_PROXY_TELEMETRY_SIZE` | `1000` | Telemetry ring buffer size |
-| `MERIDIAN_NO_FILE_CHANGES` | `CLAUDE_PROXY_NO_FILE_CHANGES` | unset | Disable "Files changed" summary in responses |
-| `MERIDIAN_SONNET_MODEL` | `CLAUDE_PROXY_SONNET_MODEL` | `sonnet` | Sonnet context tier: `sonnet` (200k, default) or `sonnet[1m]` (1M, requires Extra Usage†) |
-| `MERIDIAN_DEFAULT_AGENT` | — | `opencode` | Default adapter for unrecognized agents: `opencode`, `pi`, `crush`, `droid`, `passthrough`. Requires restart. |
-| `MERIDIAN_PROFILES` | — | unset | JSON array of profile configs (overrides disk discovery). See [Multi-Profile Support](#multi-profile-support). |
-| `MERIDIAN_DEFAULT_PROFILE` | — | *(first profile)* | Default profile ID when no header is sent |
+| `GINNY_PORT` | `CLAUDE_PROXY_PORT` | `3456` | Port to listen on |
+| `GINNY_HOST` | `CLAUDE_PROXY_HOST` | `127.0.0.1` | Host to bind to |
+| `GINNY_PASSTHROUGH` | `CLAUDE_PROXY_PASSTHROUGH` | unset | Forward tool calls to client instead of executing |
+| `GINNY_MAX_CONCURRENT` | `CLAUDE_PROXY_MAX_CONCURRENT` | `10` | Maximum concurrent SDK sessions |
+| `GINNY_MAX_SESSIONS` | `CLAUDE_PROXY_MAX_SESSIONS` | `1000` | In-memory LRU session cache size |
+| `GINNY_MAX_STORED_SESSIONS` | `CLAUDE_PROXY_MAX_STORED_SESSIONS` | `10000` | File-based session store capacity |
+| `GINNY_WORKDIR` | `CLAUDE_PROXY_WORKDIR` | `cwd()` | Default working directory for SDK |
+| `GINNY_IDLE_TIMEOUT_SECONDS` | `CLAUDE_PROXY_IDLE_TIMEOUT_SECONDS` | `120` | HTTP keep-alive timeout |
+| `GINNY_TELEMETRY_SIZE` | `CLAUDE_PROXY_TELEMETRY_SIZE` | `1000` | Telemetry ring buffer size |
+| `GINNY_NO_FILE_CHANGES` | `CLAUDE_PROXY_NO_FILE_CHANGES` | unset | Disable "Files changed" summary in responses |
+| `GINNY_SONNET_MODEL` | `CLAUDE_PROXY_SONNET_MODEL` | `sonnet` | Sonnet context tier: `sonnet` (200k, default) or `sonnet[1m]` (1M, requires Extra Usage†) |
+| `GINNY_DEFAULT_AGENT` | — | `opencode` | Default adapter for unrecognized agents: `opencode`, `pi`, `crush`, `droid`, `passthrough`. Requires restart. |
+| `GINNY_PROFILES` | — | unset | JSON array of profile configs (overrides disk discovery). See [Multi-Profile Support](#multi-profile-support). |
+| `GINNY_DEFAULT_PROFILE` | — | *(first profile)* | Default profile ID when no header is sent |
 
 †Sonnet 1M requires Extra Usage on all plans including Max ([docs](https://code.claude.com/docs/en/model-config#extended-context)). Opus 1M is included with Max/Team/Enterprise at no extra cost.
 
@@ -430,25 +430,25 @@ Health response example:
 }
 ```
 
-`plugin.opencode` is `"configured"` when `meridian setup` has been run, `"not-configured"` otherwise.
+`plugin.opencode` is `"configured"` when `ginny setup` has been run, `"not-configured"` otherwise.
 
 ## CLI Commands
 
 | Command | Description |
 |---------|-------------|
-| `meridian` | Start the proxy server |
-| `meridian setup` | Configure the OpenCode plugin in `~/.config/opencode/opencode.json` |
-| `meridian profile add <name>` | Add a profile and authenticate via browser |
-| `meridian profile list` | List all profiles and their auth status |
-| `meridian profile switch <name>` | Switch the active profile (requires running proxy) |
-| `meridian profile login <name>` | Re-authenticate an expired profile |
-| `meridian profile remove <name>` | Remove a profile and its credentials |
-| `meridian refresh-token` | Manually refresh the Claude OAuth token (exits 0/1) |
+| `ginny` | Start the proxy server |
+| `ginny setup` | Configure the OpenCode plugin in `~/.config/opencode/opencode.json` |
+| `ginny profile add <name>` | Add a profile and authenticate via browser |
+| `ginny profile list` | List all profiles and their auth status |
+| `ginny profile switch <name>` | Switch the active profile (requires running proxy) |
+| `ginny profile login <name>` | Re-authenticate an expired profile |
+| `ginny profile remove <name>` | Remove a profile and its credentials |
+| `ginny refresh-token` | Manually refresh the Claude OAuth token (exits 0/1) |
 
 ## Programmatic API
 
 ```typescript
-import { startProxyServer } from "@rynfar/meridian"
+import { startProxyServer } from "ginny"
 
 const instance = await startProxyServer({
   port: 3456,
@@ -463,7 +463,7 @@ await instance.close()
 ## Docker
 
 ```bash
-docker run -v ~/.claude:/home/claude/.claude -p 3456:3456 meridian
+docker run -v ~/.claude:/home/claude/.claude -p 3456:3456 ginny
 ```
 
 ## Testing
@@ -482,29 +482,29 @@ npm run build  # build with bun + tsc
 ## FAQ
 
 **Is this allowed by Anthropic's terms?**
-Meridian uses the official Claude Code SDK — the same SDK Anthropic publishes and documents for programmatic access. It does not intercept credentials, modify binaries, or bypass any authentication. All requests flow through the SDK's own authentication and rate-limiting mechanisms.
+Ginny uses the official Claude Code SDK — the same SDK Anthropic publishes and documents for programmatic access. It does not intercept credentials, modify binaries, or bypass any authentication. All requests flow through the SDK's own authentication and rate-limiting mechanisms.
 
 **How is this different from using an API key?**
-API keys provide direct API access billed per token. Claude Max includes programmatic access through the Claude Code SDK. Meridian translates SDK responses into the standard Anthropic API format, allowing compatible tools to connect through Claude Code.
+API keys provide direct API access billed per token. Claude Max includes programmatic access through the Claude Code SDK. Ginny translates SDK responses into the standard Anthropic API format, allowing compatible tools to connect through Claude Code.
 
 **What happens if my OAuth token expires?**
-Tokens expire roughly every 8 hours. Meridian detects the expiry, refreshes the token automatically, and retries the request — so requests continue transparently. If the refresh fails (e.g. the refresh token has expired after weeks of inactivity), Meridian returns a clear error telling you to run `claude login`.
+Tokens expire roughly every 8 hours. Ginny detects the expiry, refreshes the token automatically, and retries the request — so requests continue transparently. If the refresh fails (e.g. the refresh token has expired after weeks of inactivity), Ginny returns a clear error telling you to run `claude login`.
 
 **Can I trigger a token refresh manually?**
 
 ```bash
 # CLI — works whether the proxy is running or not
-meridian refresh-token
+ginny refresh-token
 
 # HTTP — while the proxy is running
 curl -X POST http://127.0.0.1:3456/auth/refresh
 ```
 
 **I'm hitting rate limits on 1M context. What do I do?**
-Meridian defaults Sonnet to 200k context because Sonnet 1M is always billed as Extra Usage on Max plans — even when regular usage isn't exhausted. This is [Anthropic's intended billing model](https://code.claude.com/docs/en/model-config#extended-context), not a bug. Set `MERIDIAN_SONNET_MODEL=sonnet[1m]` to opt in if you have Extra Usage enabled and understand the billing implications. Opus defaults to 1M context, which is included with Max/Team/Enterprise subscriptions at no extra cost. Note: there is a [known upstream bug](https://github.com/anthropics/claude-code/issues/39841) where Claude Code incorrectly gates Opus 1M behind Extra Usage on Max — this is Anthropic's to fix.
+Ginny defaults Sonnet to 200k context because Sonnet 1M is always billed as Extra Usage on Max plans — even when regular usage isn't exhausted. This is [Anthropic's intended billing model](https://code.claude.com/docs/en/model-config#extended-context), not a bug. Set `GINNY_SONNET_MODEL=sonnet[1m]` to opt in if you have Extra Usage enabled and understand the billing implications. Opus defaults to 1M context, which is included with Max/Team/Enterprise subscriptions at no extra cost. Note: there is a [known upstream bug](https://github.com/anthropics/claude-code/issues/39841) where Claude Code incorrectly gates Opus 1M behind Extra Usage on Max — this is Anthropic's to fix.
 
 **Why does the health endpoint show `"plugin": "not-configured"`?**
-You haven't run `meridian setup`. Without the plugin, OpenCode requests won't have session tracking or subagent model selection. Run `meridian setup` and restart OpenCode.
+You haven't run `ginny setup`. Without the plugin, OpenCode requests won't have session tracking or subagent model selection. Run `ginny setup` and restart OpenCode.
 
 ## Contributing
 

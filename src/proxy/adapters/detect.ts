@@ -23,10 +23,10 @@ const ADAPTER_MAP: Record<string, AgentAdapter> = {
   openclaw: openClawAdapter,
 }
 
-const envDefault = process.env.MERIDIAN_DEFAULT_AGENT || ""
+const envDefault = process.env.GINNY_DEFAULT_AGENT || ""
 if (envDefault && !ADAPTER_MAP[envDefault]) {
   console.warn(
-    `[meridian] Unknown MERIDIAN_DEFAULT_AGENT="${envDefault}". ` +
+    `[ginny] Unknown GINNY_DEFAULT_AGENT="${envDefault}". ` +
     `Valid values: ${Object.keys(ADAPTER_MAP).join(", ")}. Falling back to opencode.`
   )
 }
@@ -49,17 +49,17 @@ function isLiteLLMRequest(c: Context): boolean {
  * Detect which agent adapter to use based on request headers.
  *
  * Detection rules (evaluated in order):
- * 1. x-meridian-agent header               → explicit adapter override
+ * 1. x-ginny-agent header               → explicit adapter override
  * 2. x-opencode-session or x-session-affinity header → OpenCode adapter
  * 3. User-Agent starts with "opencode/"     → OpenCode adapter
  * 4. User-Agent starts with "factory-cli/"  → Droid adapter
  * 5. User-Agent starts with "Charm-Crush/"  → Crush adapter
  * 6. openclaw/* UA or x-openclaw-* headers  → OpenClaw passthrough adapter
  * 7. litellm/* UA or x-litellm-* headers   → LiteLLM passthrough adapter
- * 8. Default                                → MERIDIAN_DEFAULT_AGENT env var, or OpenCode
+ * 8. Default                                → GINNY_DEFAULT_AGENT env var, or OpenCode
  */
 export function detectAdapter(c: Context): AgentAdapter {
-  const agentOverride = c.req.header("x-meridian-agent")?.toLowerCase()
+  const agentOverride = c.req.header("x-ginny-agent")?.toLowerCase()
   if (agentOverride && ADAPTER_MAP[agentOverride]) {
     return ADAPTER_MAP[agentOverride]!
   }

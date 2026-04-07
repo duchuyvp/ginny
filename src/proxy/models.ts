@@ -63,8 +63,8 @@ export function mapModelToClaudeModel(model: string, subscriptionType?: string |
   // Sonnet [1m]: requires Extra Usage on Max plans per Anthropic docs.
   // Unlike Opus, Sonnet 1M is NOT included with the Max subscription —
   // it is always billed as Extra Usage. Default to sonnet (200k) to
-  // avoid unexpected charges. Users opt in via MERIDIAN_SONNET_MODEL=sonnet[1m].
-  const sonnetOverride = process.env.MERIDIAN_SONNET_MODEL ?? process.env.CLAUDE_PROXY_SONNET_MODEL
+  // avoid unexpected charges. Users opt in via GINNY_SONNET_MODEL=sonnet[1m].
+  const sonnetOverride = process.env.GINNY_SONNET_MODEL ?? process.env.CLAUDE_PROXY_SONNET_MODEL
   if (sonnetOverride === "sonnet[1m]") {
     if (!use1m || isSubagent || isExtendedContextKnownUnavailable()) return "sonnet"
     return "sonnet[1m]"

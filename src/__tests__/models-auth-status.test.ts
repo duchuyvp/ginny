@@ -136,7 +136,7 @@ describe("Auth status resilience - model selection", () => {
   it("model stays sonnet (200k) when auth degrades — sonnet[1m] is opt-in", async () => {
     // Sonnet defaults to 200k regardless of subscription (1M requires Extra Usage).
     // Auth resilience preserves subscriptionType for opus[1m] selection, but
-    // sonnet is always 200k unless MERIDIAN_SONNET_MODEL=sonnet[1m] is set.
+    // sonnet is always 200k unless GINNY_SONNET_MODEL=sonnet[1m] is set.
     const authResult = await getClaudeAuthStatusAsync()
 
     if (authResult?.subscriptionType !== "max") {

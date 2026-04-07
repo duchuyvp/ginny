@@ -1,16 +1,16 @@
 /**
  * Environment variable resolution with backward-compatible aliases.
  *
- * New MERIDIAN_* names take precedence over legacy CLAUDE_PROXY_* names.
+ * New GINNY_* names take precedence over legacy CLAUDE_PROXY_* names.
  * Both are supported indefinitely to avoid breaking existing deployments.
  */
 
 /**
- * Resolve an env var with MERIDIAN_ prefix, falling back to CLAUDE_PROXY_ prefix.
+ * Resolve an env var with GINNY_ prefix, falling back to CLAUDE_PROXY_ prefix.
  * Returns undefined if neither is set.
  */
 export function env(suffix: string): string | undefined {
-  return process.env[`MERIDIAN_${suffix}`] ?? process.env[`CLAUDE_PROXY_${suffix}`]
+  return process.env[`GINNY_${suffix}`] ?? process.env[`CLAUDE_PROXY_${suffix}`]
 }
 
 /**

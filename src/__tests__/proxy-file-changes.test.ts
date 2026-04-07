@@ -168,9 +168,9 @@ describe("File change visibility: PostToolUse hook registration", () => {
   })
 
   it("should not register PostToolUse in passthrough mode", async () => {
-    const origPassthrough = process.env.MERIDIAN_PASSTHROUGH
+    const origPassthrough = process.env.GINNY_PASSTHROUGH
     const origCPPassthrough = process.env.CLAUDE_PROXY_PASSTHROUGH
-    process.env.MERIDIAN_PASSTHROUGH = "1"
+    process.env.GINNY_PASSTHROUGH = "1"
 
     try {
       const app = createTestApp()
@@ -186,9 +186,9 @@ describe("File change visibility: PostToolUse hook registration", () => {
       expect(hooks.PostToolUse).toBeUndefined()
     } finally {
       if (origPassthrough !== undefined) {
-        process.env.MERIDIAN_PASSTHROUGH = origPassthrough
+        process.env.GINNY_PASSTHROUGH = origPassthrough
       } else {
-        delete process.env.MERIDIAN_PASSTHROUGH
+        delete process.env.GINNY_PASSTHROUGH
       }
       if (origCPPassthrough !== undefined) {
         process.env.CLAUDE_PROXY_PASSTHROUGH = origCPPassthrough
@@ -438,27 +438,27 @@ describe("File change visibility: streaming response", () => {
   })
 })
 
-describe("File change visibility: MERIDIAN_NO_FILE_CHANGES opt-out", () => {
-  let origMeridian: string | undefined
+describe("File change visibility: GINNY_NO_FILE_CHANGES opt-out", () => {
+  let origGinny: string | undefined
   let origClaude: string | undefined
 
   beforeEach(() => {
     mockMessages = []
     capturedQueryParams = null
     clearSessionCache()
-    origMeridian = process.env.MERIDIAN_NO_FILE_CHANGES
+    origGinny = process.env.GINNY_NO_FILE_CHANGES
     origClaude = process.env.CLAUDE_PROXY_NO_FILE_CHANGES
   })
 
   afterEach(() => {
-    if (origMeridian !== undefined) process.env.MERIDIAN_NO_FILE_CHANGES = origMeridian
-    else delete process.env.MERIDIAN_NO_FILE_CHANGES
+    if (origGinny !== undefined) process.env.GINNY_NO_FILE_CHANGES = origGinny
+    else delete process.env.GINNY_NO_FILE_CHANGES
     if (origClaude !== undefined) process.env.CLAUDE_PROXY_NO_FILE_CHANGES = origClaude
     else delete process.env.CLAUDE_PROXY_NO_FILE_CHANGES
   })
 
-  it("should suppress PostToolUse hook registration when MERIDIAN_NO_FILE_CHANGES=1", async () => {
-    process.env.MERIDIAN_NO_FILE_CHANGES = "1"
+  it("should suppress PostToolUse hook registration when GINNY_NO_FILE_CHANGES=1", async () => {
+    process.env.GINNY_NO_FILE_CHANGES = "1"
     mockMessages = [assistantMessage([{ type: "text", text: "Done" }])]
 
     const app = createTestApp()
@@ -472,8 +472,8 @@ describe("File change visibility: MERIDIAN_NO_FILE_CHANGES opt-out", () => {
     expect(capturedQueryParams?.options?.hooks?.PostToolUse).toBeUndefined()
   })
 
-  it("should suppress file change summary in non-streaming response when MERIDIAN_NO_FILE_CHANGES=1", async () => {
-    process.env.MERIDIAN_NO_FILE_CHANGES = "1"
+  it("should suppress file change summary in non-streaming response when GINNY_NO_FILE_CHANGES=1", async () => {
+    process.env.GINNY_NO_FILE_CHANGES = "1"
     mockMessages = [
       assistantMessage([
         { type: "tool_use", id: "toolu_w1", name: "mcp__opencode__write", input: { path: "src/new-file.ts", content: "export const x = 1" } },
@@ -497,8 +497,8 @@ describe("File change visibility: MERIDIAN_NO_FILE_CHANGES opt-out", () => {
     expect(allText).toContain("I created the file.")
   })
 
-  it("should suppress file change SSE block in streaming response when MERIDIAN_NO_FILE_CHANGES=1", async () => {
-    process.env.MERIDIAN_NO_FILE_CHANGES = "1"
+  it("should suppress file change SSE block in streaming response when GINNY_NO_FILE_CHANGES=1", async () => {
+    process.env.GINNY_NO_FILE_CHANGES = "1"
     mockMessages = [
       messageStart(),
       toolUseBlockStart(0, "mcp__opencode__write", "toolu_w2"),

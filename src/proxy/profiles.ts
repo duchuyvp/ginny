@@ -1,12 +1,12 @@
 /**
  * Multi-profile support.
  *
- * Allows a single Meridian instance to route requests to different Claude
+ * Allows a single Ginny instance to route requests to different Claude
  * accounts. Each profile is a named auth context (a CLAUDE_CONFIG_DIR for
  * Max subscriptions, or an API key for direct API access).
  *
  * Profile selection priority:
- *   1. x-meridian-profile request header (per-request override)
+ *   1. x-ginny-profile request header (per-request override)
  *   2. Active profile (set via POST /profiles/active or UI)
  *   3. First configured profile (or implicit "default" if none configured)
  *
@@ -18,7 +18,7 @@ import { join } from "node:path"
 import { homedir } from "node:os"
 import { setSetting, getSetting } from "./settings"
 
-const CONFIG_FILE = join(homedir(), ".config", "meridian", "profiles.json")
+const CONFIG_FILE = join(homedir(), ".config", "ginny", "profiles.json")
 
 /** Disk profile cache with short TTL so new profiles are picked up quickly */
 const DISK_CACHE_TTL_MS = 5_000
@@ -26,7 +26,7 @@ let diskProfilesCache: ProfileConfig[] = []
 let diskProfilesCacheAt = 0
 
 /**
- * Load profiles from ~/.config/meridian/profiles.json.
+ * Load profiles from ~/.config/ginny/profiles.json.
  * Cached with a 5s TTL so new profiles are picked up without restart,
  * while avoiding synchronous disk I/O on every request.
  */
@@ -43,7 +43,7 @@ export function loadProfilesFromDisk(): ProfileConfig[] {
     diskProfilesCacheAt = Date.now()
     return diskProfilesCache
   } catch (err) {
-    console.warn(`[meridian] Failed to read ${CONFIG_FILE}: ${err instanceof Error ? err.message : err}`)
+    console.warn(`[ginny] Failed to read ${CONFIG_FILE}: ${err instanceof Error ? err.message : err}`)
     diskProfilesCacheAt = Date.now()
     diskProfilesCache = []
     return []
@@ -78,8 +78,8 @@ const DEFAULT_PROFILE_ID = "default"
 let activeProfileId: string | undefined
 
 /**
- * Set the active profile. All requests without an explicit x-meridian-profile
- * header will use this profile. Persisted to ~/.config/meridian/settings.json.
+ * Set the active profile. All requests without an explicit x-ginny-profile
+ * header will use this profile. Persisted to ~/.config/ginny/settings.json.
  */
 export function setActiveProfile(profileId: string): void {
   activeProfileId = profileId
@@ -114,21 +114,21 @@ export function restoreActiveProfile(configProfiles?: ProfileConfig[]): void {
   if (effective.length === 0 || effective.some(p => p.id === saved)) {
     activeProfileId = saved
   } else {
-    console.warn(`[meridian] Saved active profile "${saved}" not found. Using default.`)
+    console.warn(`[ginny] Saved active profile "${saved}" not found. Using default.`)
   }
 }
 
 /**
  * Get the effective profile list: config-provided profiles merged with
  * disk-loaded profiles. Disk profiles are re-read on each call so new
- * profiles added via `meridian profile add` are picked up without restart.
+ * profiles added via `ginny profile add` are picked up without restart.
  */
 /** Whether disk auto-discovery is enabled (set by CLI at startup) */
 let diskDiscoveryEnabled = false
 
 /** Enable disk auto-discovery of profiles. Called by the CLI when
- *  no MERIDIAN_PROFILES env var is set, so the server picks up
- *  profiles from ~/.config/meridian/profiles.json dynamically. */
+ *  no GINNY_PROFILES env var is set, so the server picks up
+ *  profiles from ~/.config/ginny/profiles.json dynamically. */
 export function enableDiskProfileDiscovery(): void {
   diskDiscoveryEnabled = true
 }
@@ -171,7 +171,7 @@ export function resolveProfile(
   const profile = effective.find(p => p.id === resolvedId)
 
   if (!profile) {
-    console.warn(`[meridian] Unknown profile "${resolvedId}". Using first configured profile.`)
+    console.warn(`[ginny] Unknown profile "${resolvedId}". Using first configured profile.`)
     return buildResolvedProfile(effective[0]!)
   }
 

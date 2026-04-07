@@ -10,7 +10,7 @@ services:
 
   proxy:
     build: .
-    image: meridian
+    image: ginny
     user: "claude"
     depends_on:
       init:

@@ -113,16 +113,16 @@ describe("Passthrough streaming: early termination on tool_use stop", () => {
 
   beforeEach(() => {
     mockMessages = []
-    origEnv = process.env.MERIDIAN_PASSTHROUGH
-    process.env.MERIDIAN_PASSTHROUGH = "1"
+    origEnv = process.env.GINNY_PASSTHROUGH
+    process.env.GINNY_PASSTHROUGH = "1"
     clearSessionCache()
   })
 
   afterEach(() => {
     if (origEnv !== undefined) {
-      process.env.MERIDIAN_PASSTHROUGH = origEnv
+      process.env.GINNY_PASSTHROUGH = origEnv
     } else {
-      delete process.env.MERIDIAN_PASSTHROUGH
+      delete process.env.GINNY_PASSTHROUGH
     }
   })
 
@@ -253,16 +253,16 @@ describe("Passthrough non-streaming: tool_use returned without HTTP 500", () => 
 
   beforeEach(() => {
     mockMessages = []
-    origEnv = process.env.MERIDIAN_PASSTHROUGH
-    process.env.MERIDIAN_PASSTHROUGH = "1"
+    origEnv = process.env.GINNY_PASSTHROUGH
+    process.env.GINNY_PASSTHROUGH = "1"
     clearSessionCache()
   })
 
   afterEach(() => {
     if (origEnv !== undefined) {
-      process.env.MERIDIAN_PASSTHROUGH = origEnv
+      process.env.GINNY_PASSTHROUGH = origEnv
     } else {
-      delete process.env.MERIDIAN_PASSTHROUGH
+      delete process.env.GINNY_PASSTHROUGH
     }
   })
 

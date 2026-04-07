@@ -159,7 +159,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
     if (accept.includes("application/json") && !accept.includes("text/html")) {
       return c.json({
         status: "ok",
-        service: "meridian",
+        service: "ginny",
         format: "anthropic",
         endpoints: ["/v1/messages", "/messages", "/v1/chat/completions", "/v1/models", "/telemetry", "/health"]
       })
@@ -170,7 +170,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
   // --- Concurrency Control ---
   // Each request spawns an SDK subprocess (cli.js, ~11MB). Spawning multiple
   // simultaneously can crash the process. Serialize SDK queries with a queue.
-  const MAX_CONCURRENT_SESSIONS = parseInt((process.env.MERIDIAN_MAX_CONCURRENT ?? process.env.CLAUDE_PROXY_MAX_CONCURRENT) || "10", 10)
+  const MAX_CONCURRENT_SESSIONS = parseInt((process.env.GINNY_MAX_CONCURRENT ?? process.env.CLAUDE_PROXY_MAX_CONCURRENT) || "10", 10)
   let activeSessions = 0
   const sessionQueue: Array<{ resolve: () => void }> = []
 
@@ -217,7 +217,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
         const profile = resolveProfile(
           finalConfig.profiles,
           finalConfig.defaultProfile,
-          c.req.header("x-meridian-profile") || undefined
+          c.req.header("x-ginny-profile") || undefined
         )
 
         const authStatus = await getClaudeAuthStatusAsync(
@@ -229,7 +229,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
         // Allow adapter to override streaming preference (e.g. LiteLLM requires non-streaming)
         const adapterStreamPref = adapter.prefersStreaming?.(body)
         const stream = adapterStreamPref !== undefined ? adapterStreamPref : (body.stream ?? false)
-        const workingDirectory = (process.env.MERIDIAN_WORKDIR ?? process.env.CLAUDE_PROXY_WORKDIR) || adapter.extractWorkingDirectory(body) || process.cwd()
+        const workingDirectory = (process.env.GINNY_WORKDIR ?? process.env.CLAUDE_PROXY_WORKDIR) || adapter.extractWorkingDirectory(body) || process.cwd()
 
         // Strip env vars that would cause the SDK subprocess to loop back through
         // the proxy instead of using its native Claude Max auth. Also strip vars
@@ -271,10 +271,10 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
         // continue to work — blanket stripping caused ~3x TTFB and ~3x token
         // consumption on long conversations.
         //
-        // Operators can override the policy at runtime via the MERIDIAN_BETA_POLICY
+        // Operators can override the policy at runtime via the GINNY_BETA_POLICY
         // env var: `strip-all` restores the pre-fix behaviour (kill switch),
         // `allow-all` forwards everything unconditionally.
-        // See: https://github.com/rynfar/meridian/issues/278
+        // See: https://github.com/rynfar/ginny/issues/278
         const rawBetaHeader = c.req.header("anthropic-beta")
         const betaFilter = filterBetasForProfile(rawBetaHeader, profile.type, getBetaPolicyFromEnv())
         if (betaFilter.stripped.length > 0) {
@@ -352,7 +352,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
       // OpenCode parses the Task tool description; other adapters return empty.
       const sdkAgents = adapter.buildSdkAgents?.(body, adapter.getAllowedMcpTools()) ?? {}
       const validAgentNames = Object.keys(sdkAgents)
-      if ((process.env.MERIDIAN_DEBUG ?? process.env.CLAUDE_PROXY_DEBUG) && validAgentNames.length > 0) {
+      if ((process.env.GINNY_DEBUG ?? process.env.CLAUDE_PROXY_DEBUG) && validAgentNames.length > 0) {
         claudeLog("debug.agents", { names: validAgentNames, count: validAgentNames.length })
       }
       systemContext += adapter.buildSystemContextAddendum?.(body, sdkAgents) ?? ""
@@ -522,7 +522,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
       // PostToolUse hook tracks file changes from MCP tools (internal mode only).
       // Catches write, edit, AND bash redirects (>, >>, tee, sed -i).
       const mcpPrefix = `mcp__${adapter.getMcpServerName()}__`
-      const trackFileChanges = !(process.env.MERIDIAN_NO_FILE_CHANGES ?? process.env.CLAUDE_PROXY_NO_FILE_CHANGES)
+      const trackFileChanges = !(process.env.GINNY_NO_FILE_CHANGES ?? process.env.CLAUDE_PROXY_NO_FILE_CHANGES)
       const fileChangeHook = trackFileChanges ? createFileChangeHook(fileChanges, mcpPrefix) : undefined
 
       const sdkHooks = passthrough
@@ -1850,7 +1850,7 @@ export async function startProxyServer(config: Partial<ProxyConfig> = {}): Promi
     overrideGlobalObjects: false,
   }, (info) => {
     if (!finalConfig.silent) {
-      console.log(`Meridian running at http://${finalConfig.host}:${info.port}`)
+      console.log(`Ginny running at http://${finalConfig.host}:${info.port}`)
       console.log(`Telemetry dashboard: http://${finalConfig.host}:${info.port}/telemetry`)
       console.log(`\nPoint any Anthropic-compatible tool at this endpoint:`)
       console.log(`  ANTHROPIC_API_KEY=x ANTHROPIC_BASE_URL=http://${finalConfig.host}:${info.port}`)
@@ -1868,7 +1868,7 @@ export async function startProxyServer(config: Partial<ProxyConfig> = {}): Promi
       console.error(`  Check with: lsof -i :${finalConfig.port}`)
       console.error(`  Kill it with: kill $(lsof -ti :${finalConfig.port})`)
       console.error(`\nOr use a different port:`)
-      console.error(`  MERIDIAN_PORT=4567 meridian`)
+      console.error(`  GINNY_PORT=4567 ginny`)
     }
   })
 

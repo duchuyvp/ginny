@@ -10,7 +10,7 @@ export const profilePageHtml = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meridian — Profiles</title>
+<title>Ginny — Profiles</title>
 <style>
   :root {
     --bg: #0d1117; --surface: #161b22; --border: #30363d;
@@ -110,19 +110,19 @@ export const profilePageHtml = `<!DOCTYPE html>
     <h3>How profiles work</h3>
     <p style="font-size:13px;color:var(--muted);margin-bottom:12px">
       Each profile is a separate Claude account with its own login credentials.
-      Meridian stores them in isolated config directories and switches between them instantly.
+      Ginny stores them in isolated config directories and switches between them instantly.
     </p>
 
     <h3 style="margin-top:16px">Adding a new profile</h3>
     <ol>
-      <li>Open a terminal and run: <code>meridian profile add &lt;name&gt;</code></li>
+      <li>Open a terminal and run: <code>ginny profile add &lt;name&gt;</code></li>
       <li>This opens your browser for Claude login</li>
       <li>Done \u2014 the profile is ready to use</li>
     </ol>
 
     <div class="warn">
       <strong>\u26a0 Important for adding a second account:</strong> Before running
-      <code>meridian profile add</code> for a different account, sign out of claude.ai
+      <code>ginny profile add</code> for a different account, sign out of claude.ai
       in your browser first, then sign in with the other account. Claude\u2019s OAuth
       reuses your browser session \u2014 if you\u2019re already signed in, the login will
       silently use the same account.
@@ -131,15 +131,15 @@ export const profilePageHtml = `<!DOCTYPE html>
     <h3 style="margin-top:16px">Switching profiles</h3>
     <ol>
       <li><strong>UI:</strong> Use the dropdown at the top of this page</li>
-      <li><strong>CLI:</strong> <code>meridian profile switch &lt;name&gt;</code></li>
-      <li><strong>Per-request:</strong> Send <code>x-meridian-profile: &lt;name&gt;</code> header</li>
+      <li><strong>CLI:</strong> <code>ginny profile switch &lt;name&gt;</code></li>
+      <li><strong>Per-request:</strong> Send <code>x-ginny-profile: &lt;name&gt;</code> header</li>
     </ol>
 
     <h3 style="margin-top:16px">Other commands</h3>
     <div style="font-size:13px;margin-top:8px">
-      <code>meridian profile list</code> \u2014 show all profiles and auth status<br>
-      <code>meridian profile login &lt;name&gt;</code> \u2014 re-authenticate an expired profile<br>
-      <code>meridian profile remove &lt;name&gt;</code> \u2014 remove a profile
+      <code>ginny profile list</code> \u2014 show all profiles and auth status<br>
+      <code>ginny profile login &lt;name&gt;</code> \u2014 re-authenticate an expired profile<br>
+      <code>ginny profile remove &lt;name&gt;</code> \u2014 remove a profile
     </div>
   </div>
 </div>
@@ -152,7 +152,7 @@ async function refresh() {
     const data = await res.json();
     render(data);
   } catch {
-    document.getElementById('content').innerHTML = '<div class="empty-state"><h2>Could not load profiles</h2><p>Is Meridian running?</p></div>';
+    document.getElementById('content').innerHTML = '<div class="empty-state"><h2>Could not load profiles</h2><p>Is Ginny running?</p></div>';
   }
 }
 
@@ -166,7 +166,7 @@ function render(data) {
     document.getElementById('content').innerHTML = '<div class="empty-state">'
       + '<h2>No profiles configured</h2>'
       + '<p style="margin-top:8px">Add your first profile from the terminal:</p>'
-      + '<p style="margin-top:8px"><code class="mono" style="background:var(--bg);padding:8px 16px;border-radius:6px;display:inline-block">meridian profile add personal</code></p>'
+      + '<p style="margin-top:8px"><code class="mono" style="background:var(--bg);padding:8px 16px;border-radius:6px;display:inline-block">ginny profile add personal</code></p>'
       + '</div>';
     return;
   }
@@ -213,8 +213,8 @@ function render(data) {
 
     html += '<div style="margin-top:10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">';
     html += '<span style="font-size:11px;color:var(--muted)">Login:</span> ';
-    html += '<code class="copy-cmd">meridian profile login ' + esc(p.id) + '</code>';
-    html += '<button class="copy-btn" data-cmd="meridian profile login ' + esc(p.id) + '" onclick="copyCmd(this)" title="Copy to clipboard">';
+    html += '<code class="copy-cmd">ginny profile login ' + esc(p.id) + '</code>';
+    html += '<button class="copy-btn" data-cmd="ginny profile login ' + esc(p.id) + '" onclick="copyCmd(this)" title="Copy to clipboard">';
     html += '<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25zM5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25z"/></svg>';
     html += '</button>';
     html += '</div>';

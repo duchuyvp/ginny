@@ -150,7 +150,7 @@ describe("SDK param passthrough — header overrides", () => {
     // Free betas (prompt-caching, context-1m, etc.) must pass through so the
     // SDK can use prompt caching and 1M context. Stripping them caused ~3x
     // token consumption on long conversations.
-    // See: https://github.com/rynfar/meridian/issues/278
+    // See: https://github.com/rynfar/ginny/issues/278
     const app = createTestApp()
     await post(app, BASE_BODY, { "anthropic-beta": "context-1m-2025-08-07" })
     expect(capturedOptions.betas).toEqual(["context-1m-2025-08-07"])

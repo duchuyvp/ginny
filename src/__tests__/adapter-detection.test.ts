@@ -113,46 +113,46 @@ describe("detectAdapter — OpenCode fallback", () => {
   })
 })
 
-describe("detectAdapter — x-meridian-agent header override", () => {
-  it("returns piAdapter when x-meridian-agent is 'pi'", () => {
-    const adapter = detectAdapter(makeContext("", { "x-meridian-agent": "pi" }))
+describe("detectAdapter — x-ginny-agent header override", () => {
+  it("returns piAdapter when x-ginny-agent is 'pi'", () => {
+    const adapter = detectAdapter(makeContext("", { "x-ginny-agent": "pi" }))
     expect(adapter).toBe(piAdapter)
     expect(adapter.name).toBe("pi")
   })
 
-  it("returns crushAdapter when x-meridian-agent is 'crush'", () => {
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "crush" }))).toBe(crushAdapter)
+  it("returns crushAdapter when x-ginny-agent is 'crush'", () => {
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "crush" }))).toBe(crushAdapter)
   })
 
-  it("returns openCodeAdapter when x-meridian-agent is 'opencode'", () => {
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "opencode" }))).toBe(openCodeAdapter)
+  it("returns openCodeAdapter when x-ginny-agent is 'opencode'", () => {
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "opencode" }))).toBe(openCodeAdapter)
   })
 
-  it("returns droidAdapter when x-meridian-agent is 'droid'", () => {
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "droid" }))).toBe(droidAdapter)
+  it("returns droidAdapter when x-ginny-agent is 'droid'", () => {
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "droid" }))).toBe(droidAdapter)
   })
 
-  it("returns passthroughAdapter when x-meridian-agent is 'passthrough'", () => {
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "passthrough" }))).toBe(passthroughAdapter)
+  it("returns passthroughAdapter when x-ginny-agent is 'passthrough'", () => {
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "passthrough" }))).toBe(passthroughAdapter)
   })
 
   it("is case-insensitive on header value", () => {
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "Pi" })).name).toBe("pi")
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "PI" })).name).toBe("pi")
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "CRUSH" })).name).toBe("crush")
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "OpenCode" })).name).toBe("opencode")
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "Pi" })).name).toBe("pi")
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "PI" })).name).toBe("pi")
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "CRUSH" })).name).toBe("crush")
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "OpenCode" })).name).toBe("opencode")
   })
 
   it("takes precedence over User-Agent detection", () => {
-    expect(detectAdapter(makeContext("factory-cli/1.0.0", { "x-meridian-agent": "pi" }))).toBe(piAdapter)
+    expect(detectAdapter(makeContext("factory-cli/1.0.0", { "x-ginny-agent": "pi" }))).toBe(piAdapter)
   })
 
   it("takes precedence over x-opencode-session detection", () => {
-    expect(detectAdapter(makeContext("", { "x-meridian-agent": "pi", "x-opencode-session": "sess-123" }))).toBe(piAdapter)
+    expect(detectAdapter(makeContext("", { "x-ginny-agent": "pi", "x-opencode-session": "sess-123" }))).toBe(piAdapter)
   })
 
   it("falls through for unknown header values", () => {
-    expect(detectAdapter(makeContext("factory-cli/1.0.0", { "x-meridian-agent": "unknown" }))).toBe(droidAdapter)
+    expect(detectAdapter(makeContext("factory-cli/1.0.0", { "x-ginny-agent": "unknown" }))).toBe(droidAdapter)
   })
 })
 

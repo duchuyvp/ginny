@@ -6,7 +6,7 @@
  *
  * Pi (@mariozechner/pi-coding-agent) is a CLI coding agent that makes
  * standard Anthropic Messages API calls. When using a custom baseUrl
- * (pointing at Meridian), pi operates in non-OAuth mode with lowercase
+ * (pointing at Ginny), pi operates in non-OAuth mode with lowercase
  * tool names and its own tool execution loop.
  *
  * Key characteristics:
@@ -20,8 +20,8 @@
  *
  * Detection: pi mimics Claude Code's User-Agent, so automatic detection is
  * unreliable. Use one of:
- * - x-meridian-agent: pi header (per-request)
- * - MERIDIAN_DEFAULT_AGENT=pi env var (global default)
+ * - x-ginny-agent: pi header (per-request)
+ * - GINNY_DEFAULT_AGENT=pi env var (global default)
  */
 
 import type { Context } from "hono"

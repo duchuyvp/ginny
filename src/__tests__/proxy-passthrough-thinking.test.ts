@@ -8,7 +8,7 @@
  *   The SDK needs maxTurns:2 in passthrough mode to avoid crashing. But Turn 2
  *   runs after the blocked tool call completes, and Claude generates a prose
  *   summary ("The edit has been forwarded to your local environment...").
- *   Meridian was returning both Turn 1 (tool_use) + Turn 2 (thinking + prose)
+ *   Ginny was returning both Turn 1 (tool_use) + Turn 2 (thinking + prose)
  *   in one response, which confused OpenCode's diff renderer.
  *   Fix: once Turn 1 has produced tool_use blocks, ignore all content from
  *   subsequent assistant turns.
@@ -91,10 +91,10 @@ function passthroughRequest(stream: boolean, extra: Record<string, unknown> = {}
   })
 }
 
-/** POST a request in passthrough mode (sets MERIDIAN_PASSTHROUGH for the call) */
+/** POST a request in passthrough mode (sets GINNY_PASSTHROUGH for the call) */
 async function fetchPassthrough(stream: boolean, extra: Record<string, unknown> = {}) {
-  const prev = process.env.MERIDIAN_PASSTHROUGH
-  process.env.MERIDIAN_PASSTHROUGH = "1"
+  const prev = process.env.GINNY_PASSTHROUGH
+  process.env.GINNY_PASSTHROUGH = "1"
   try {
     return await app().fetch(new Request("http://localhost/v1/messages", {
       method: "POST",
@@ -102,8 +102,8 @@ async function fetchPassthrough(stream: boolean, extra: Record<string, unknown> 
       body: JSON.stringify(passthroughRequest(stream, extra)),
     }))
   } finally {
-    if (prev === undefined) delete process.env.MERIDIAN_PASSTHROUGH
-    else process.env.MERIDIAN_PASSTHROUGH = prev
+    if (prev === undefined) delete process.env.GINNY_PASSTHROUGH
+    else process.env.GINNY_PASSTHROUGH = prev
   }
 }
 

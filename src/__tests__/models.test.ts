@@ -166,11 +166,11 @@ describe("Extra Usage cooldown", () => {
   })
 
   it("sonnet[1m] override works when cooldown is cleared", () => {
-    process.env.MERIDIAN_SONNET_MODEL = "sonnet[1m]"
+    process.env.GINNY_SONNET_MODEL = "sonnet[1m]"
     recordExtendedContextUnavailable()
     resetExtendedContextUnavailable()
     expect(mapModelToClaudeModel("claude-sonnet-4-6", "max")).toBe("sonnet[1m]")
-    delete process.env.MERIDIAN_SONNET_MODEL
+    delete process.env.GINNY_SONNET_MODEL
   })
 
   it("isExtendedContextKnownUnavailable is false after cooldown expires", () => {
@@ -195,11 +195,11 @@ describe("Extra Usage cooldown", () => {
     expect(mapModelToClaudeModel("claude-sonnet-4-6", "max", "subagent")).toBe("sonnet")
   })
 
-  it("cooldown does not affect MERIDIAN_SONNET_MODEL override", () => {
-    process.env.MERIDIAN_SONNET_MODEL = "sonnet"
+  it("cooldown does not affect GINNY_SONNET_MODEL override", () => {
+    process.env.GINNY_SONNET_MODEL = "sonnet"
     recordExtendedContextUnavailable()
     expect(mapModelToClaudeModel("claude-sonnet-4-6", "max")).toBe("sonnet")
-    delete process.env.MERIDIAN_SONNET_MODEL
+    delete process.env.GINNY_SONNET_MODEL
   })
 })
 

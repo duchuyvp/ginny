@@ -1,5 +1,5 @@
 #!/bin/sh
-# Auto-restart supervisor for Meridian
+# Auto-restart supervisor for Ginny
 #
 # The Claude Agent SDK's cli.js subprocess can crash during cleanup of
 # concurrent streaming responses. All responses are delivered correctly;

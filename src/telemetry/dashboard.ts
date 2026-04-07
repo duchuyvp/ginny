@@ -10,7 +10,7 @@ export const dashboardHtml = `<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meridian — Telemetry</title>
+<title>Ginny — Telemetry</title>
 <link rel="icon" type="image/svg+xml" href="/telemetry/icon.svg">
 <style>
   :root {
@@ -87,7 +87,7 @@ export const dashboardHtml = `<!DOCTYPE html>
 <body>
 ` + profileBarHtml + `
 <div style="padding:24px">
-<h1>Meridian</h1>
+<h1>Ginny</h1>
 <div class="subtitle">Request Performance Telemetry</div>
 
 <div class="refresh-bar">

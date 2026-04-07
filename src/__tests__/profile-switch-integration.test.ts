@@ -204,7 +204,7 @@ describe("Profile-scoped request routing", () => {
     { id: "work", claudeConfigDir: "/home/.claude-work" },
   ]
 
-  test("x-meridian-profile header overrides active profile", async () => {
+  test("x-ginny-profile header overrides active profile", async () => {
     const app = createTestApp(profiles)
 
     // Switch to personal
@@ -220,7 +220,7 @@ describe("Profile-scoped request routing", () => {
       headers: {
         "Content-Type": "application/json",
         "x-api-key": "dummy",
-        "x-meridian-profile": "work",
+        "x-ginny-profile": "work",
       },
       body: JSON.stringify({
         model: "claude-sonnet-4-6",

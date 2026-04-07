@@ -1,7 +1,7 @@
 /**
  * CLI commands for profile management.
  *
- * Profiles are stored under ~/.config/meridian/profiles/{id}/ — each
+ * Profiles are stored under ~/.config/ginny/profiles/{id}/ — each
  * directory is a standalone CLAUDE_CONFIG_DIR with its own OAuth tokens.
  *
  * This is a leaf module — no imports from server.ts or session/.
@@ -14,8 +14,8 @@ import { homedir } from "node:os"
 import type { ProfileConfig } from "./profiles"
 import { setSetting } from "./settings"
 
-const PROFILES_DIR = join(homedir(), ".config", "meridian", "profiles")
-const CONFIG_FILE = join(homedir(), ".config", "meridian", "profiles.json")
+const PROFILES_DIR = join(homedir(), ".config", "ginny", "profiles")
+const CONFIG_FILE = join(homedir(), ".config", "ginny", "profiles.json")
 
 function ensureProfilesDir(): void {
   mkdirSync(PROFILES_DIR, { recursive: true })
@@ -30,7 +30,7 @@ function loadProfileConfig(): ProfileConfig[] {
   try {
     return JSON.parse(readFileSync(CONFIG_FILE, "utf-8"))
   } catch (err) {
-    console.warn(`[meridian] Failed to read ${CONFIG_FILE}: ${err instanceof Error ? err.message : err}`)
+    console.warn(`[ginny] Failed to read ${CONFIG_FILE}: ${err instanceof Error ? err.message : err}`)
     return []
   }
 }
@@ -49,7 +49,7 @@ function getAuthStatus(configDir: string): { loggedIn: boolean; email?: string; 
     })
     return JSON.parse(result.toString())
   } catch (err) {
-    console.warn(`[meridian] Auth check failed for ${configDir}: ${err instanceof Error ? err.message : err}`)
+    console.warn(`[ginny] Auth check failed for ${configDir}: ${err instanceof Error ? err.message : err}`)
     return { loggedIn: false }
   }
 }
@@ -63,7 +63,7 @@ export function profileAdd(id: string): void {
   const profiles = loadProfileConfig()
   if (profiles.find(p => p.id === id)) {
     console.error(`\x1b[31m✗ Profile "${id}" already exists.\x1b[0m`)
-    console.error(`  Run: meridian profile list`)
+    console.error(`  Run: ginny profile list`)
     process.exit(1)
   }
 
@@ -131,7 +131,7 @@ export function profileAdd(id: string): void {
   // Verify auth succeeded
   const auth = getAuthStatus(configDir)
   if (!auth.loggedIn) {
-    console.error("\x1b[31m✗ Login did not complete. Try again: meridian profile add " + id + "\x1b[0m")
+    console.error("\x1b[31m✗ Login did not complete. Try again: ginny profile add " + id + "\x1b[0m")
     process.exit(1)
   }
 
@@ -147,7 +147,7 @@ export function profileList(): void {
   const profiles = loadProfileConfig()
   if (profiles.length === 0) {
     console.log("No profiles configured.")
-    console.log("  Add one: meridian profile add <name>")
+    console.log("  Add one: ginny profile add <name>")
     return
   }
 
@@ -187,8 +187,8 @@ export function profileRemove(id: string): void {
 }
 
 export async function profileSwitch(id: string): Promise<void> {
-  const port = process.env.MERIDIAN_PORT ?? process.env.CLAUDE_PROXY_PORT ?? "3456"
-  const host = process.env.MERIDIAN_HOST ?? process.env.CLAUDE_PROXY_HOST ?? "127.0.0.1"
+  const port = process.env.GINNY_PORT ?? process.env.CLAUDE_PROXY_PORT ?? "3456"
+  const host = process.env.GINNY_HOST ?? process.env.CLAUDE_PROXY_HOST ?? "127.0.0.1"
 
   try {
     const res = await fetch(`http://${host}:${port}/profiles/active`, {
@@ -207,7 +207,7 @@ export async function profileSwitch(id: string): Promise<void> {
       process.exit(1)
     }
   } catch {
-    console.error("\x1b[31m✗ Could not connect to Meridian. Is it running?\x1b[0m")
+    console.error("\x1b[31m✗ Could not connect to Ginny. Is it running?\x1b[0m")
     process.exit(1)
   }
 }
@@ -216,7 +216,7 @@ export function profileLogin(id: string): void {
   const profiles = loadProfileConfig()
   const profile = profiles.find(p => p.id === id)
   if (!profile) {
-    console.error(`\x1b[31m✗ Profile "${id}" not found.\x1b[0m Run: meridian profile add ${id}`)
+    console.error(`\x1b[31m✗ Profile "${id}" not found.\x1b[0m Run: ginny profile add ${id}`)
     process.exit(1)
   }
 
@@ -262,18 +262,18 @@ function printEnvHint(_profiles: ProfileConfig[]): void {
 }
 
 export function profileHelp(): void {
-  console.log(`meridian profile — manage Claude account profiles
+  console.log(`ginny profile — manage Claude account profiles
 
 Commands:
-  meridian profile add <name>       Add a profile and authenticate
-  meridian profile list             List profiles and auth status
-  meridian profile remove <name>    Remove a profile
-  meridian profile switch <name>    Switch the active profile (requires running proxy)
-  meridian profile login <name>     Re-authenticate an existing profile
+  ginny profile add <name>       Add a profile and authenticate
+  ginny profile list             List profiles and auth status
+  ginny profile remove <name>    Remove a profile
+  ginny profile switch <name>    Switch the active profile (requires running proxy)
+  ginny profile login <name>     Re-authenticate an existing profile
 
 Examples:
-  meridian profile add personal     # Add personal account
-  meridian profile add work         # Add work account
-  meridian profile switch work      # Switch to work account
-  meridian profile list             # Show all profiles`)
+  ginny profile add personal     # Add personal account
+  ginny profile add work         # Add work account
+  ginny profile switch work      # Switch to work account
+  ginny profile list             # Show all profiles`)
 }

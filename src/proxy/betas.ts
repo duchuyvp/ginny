@@ -11,7 +11,7 @@
  * every turn, which tripled TTFB and inflated token consumption roughly 3x on
  * long conversations. See issue #278 for the original context.
  *
- * An operator can override the policy at runtime via the `MERIDIAN_BETA_POLICY`
+ * An operator can override the policy at runtime via the `GINNY_BETA_POLICY`
  * env var to force `strip-all` (safest — old behaviour) or `allow-all`
  * (most permissive — matches api-profile behaviour) without a rebuild.
  *
@@ -55,13 +55,13 @@ export interface BetaFilterResult {
 }
 
 /**
- * Read the beta policy from the `MERIDIAN_BETA_POLICY` env var.
+ * Read the beta policy from the `GINNY_BETA_POLICY` env var.
  *
  * Falls back to {@link DEFAULT_BETA_POLICY} for missing or invalid values.
  * Invalid values are silently ignored rather than crashing the proxy.
  */
 export function getBetaPolicyFromEnv(): BetaPolicy {
-  const raw = process.env.MERIDIAN_BETA_POLICY
+  const raw = process.env.GINNY_BETA_POLICY
   if (raw === "allow-safe" || raw === "strip-all" || raw === "allow-all") {
     return raw
   }

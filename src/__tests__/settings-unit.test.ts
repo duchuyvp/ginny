@@ -8,11 +8,11 @@ import { tmpdir } from "node:os"
 
 // We can't easily mock homedir() in the module, so we test the
 // load/save logic by directly importing and verifying the contract.
-// The module reads/writes ~/.config/meridian/settings.json.
+// The module reads/writes ~/.config/ginny/settings.json.
 
 describe("settings module contract", () => {
   // Use a temp file to avoid polluting real settings
-  const tempDir = join(tmpdir(), `meridian-settings-test-${Date.now()}`)
+  const tempDir = join(tmpdir(), `ginny-settings-test-${Date.now()}`)
   const tempFile = join(tempDir, "test-settings.json")
 
   beforeEach(() => {

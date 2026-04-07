@@ -218,17 +218,17 @@ describe("filterBetasForProfile", () => {
 })
 
 describe("getBetaPolicyFromEnv", () => {
-  const ORIGINAL = process.env.MERIDIAN_BETA_POLICY
+  const ORIGINAL = process.env.GINNY_BETA_POLICY
 
   beforeEach(() => {
-    delete process.env.MERIDIAN_BETA_POLICY
+    delete process.env.GINNY_BETA_POLICY
   })
 
   afterEach(() => {
     if (ORIGINAL === undefined) {
-      delete process.env.MERIDIAN_BETA_POLICY
+      delete process.env.GINNY_BETA_POLICY
     } else {
-      process.env.MERIDIAN_BETA_POLICY = ORIGINAL
+      process.env.GINNY_BETA_POLICY = ORIGINAL
     }
   })
 
@@ -238,32 +238,32 @@ describe("getBetaPolicyFromEnv", () => {
   })
 
   it("returns 'allow-safe' when explicitly set", () => {
-    process.env.MERIDIAN_BETA_POLICY = "allow-safe"
+    process.env.GINNY_BETA_POLICY = "allow-safe"
     expect(getBetaPolicyFromEnv()).toBe("allow-safe")
   })
 
   it("returns 'strip-all' when env var is 'strip-all'", () => {
-    process.env.MERIDIAN_BETA_POLICY = "strip-all"
+    process.env.GINNY_BETA_POLICY = "strip-all"
     expect(getBetaPolicyFromEnv()).toBe("strip-all")
   })
 
   it("returns 'allow-all' when env var is 'allow-all'", () => {
-    process.env.MERIDIAN_BETA_POLICY = "allow-all"
+    process.env.GINNY_BETA_POLICY = "allow-all"
     expect(getBetaPolicyFromEnv()).toBe("allow-all")
   })
 
   it("falls back to default for invalid values", () => {
-    process.env.MERIDIAN_BETA_POLICY = "yolo"
+    process.env.GINNY_BETA_POLICY = "yolo"
     expect(getBetaPolicyFromEnv()).toBe(DEFAULT_BETA_POLICY)
   })
 
   it("falls back to default for empty string", () => {
-    process.env.MERIDIAN_BETA_POLICY = ""
+    process.env.GINNY_BETA_POLICY = ""
     expect(getBetaPolicyFromEnv()).toBe(DEFAULT_BETA_POLICY)
   })
 
   it("is case-sensitive (does not accept 'STRIP-ALL')", () => {
-    process.env.MERIDIAN_BETA_POLICY = "STRIP-ALL"
+    process.env.GINNY_BETA_POLICY = "STRIP-ALL"
     expect(getBetaPolicyFromEnv()).toBe(DEFAULT_BETA_POLICY)
   })
 })

@@ -7,7 +7,7 @@
  */
 
 export const profileBarCss = `
-  .meridian-profile-bar {
+  .ginny-profile-bar {
     position: sticky; top: 0; z-index: 100;
     display: none; align-items: center; gap: 12px;
     padding: 8px 24px;
@@ -17,12 +17,12 @@ export const profileBarCss = `
     font-size: 12px;
     color: var(--muted, #8b949e);
   }
-  .meridian-profile-bar.visible { display: flex; }
-  .meridian-profile-bar .profile-label {
+  .ginny-profile-bar.visible { display: flex; }
+  .ginny-profile-bar .profile-label {
     font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;
     font-size: 10px; color: var(--muted, #8b949e);
   }
-  .meridian-profile-bar select {
+  .ginny-profile-bar select {
     background: var(--surface, #161b22); color: var(--text, #e6edf3);
     border: 1px solid var(--border, #30363d); border-radius: 6px;
     padding: 4px 24px 4px 10px; font-size: 12px; cursor: pointer;
@@ -30,32 +30,32 @@ export const profileBarCss = `
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 5l3 3 3-3' fill='none' stroke='%238b949e' stroke-width='1.5'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right 6px center;
   }
-  .meridian-profile-bar select:hover { border-color: var(--accent, #58a6ff); }
-  .meridian-profile-bar select:focus { outline: none; border-color: var(--accent, #58a6ff); box-shadow: 0 0 0 1px var(--accent, #58a6ff); }
-  .meridian-profile-bar .profile-status {
+  .ginny-profile-bar select:hover { border-color: var(--accent, #58a6ff); }
+  .ginny-profile-bar select:focus { outline: none; border-color: var(--accent, #58a6ff); box-shadow: 0 0 0 1px var(--accent, #58a6ff); }
+  .ginny-profile-bar .profile-status {
     font-size: 11px; color: var(--green, #3fb950); opacity: 0;
     transition: opacity 0.3s;
   }
-  .meridian-profile-bar .profile-status.show { opacity: 1; }
-  .meridian-profile-bar .profile-type {
+  .ginny-profile-bar .profile-status.show { opacity: 1; }
+  .ginny-profile-bar .profile-type {
     font-size: 10px; padding: 2px 8px; border-radius: 4px;
     background: var(--surface, #161b22); border: 1px solid var(--border, #30363d);
   }
-  .meridian-profile-bar .spacer { flex: 1; }
-  .meridian-profile-bar .profile-nav a {
+  .ginny-profile-bar .spacer { flex: 1; }
+  .ginny-profile-bar .profile-nav a {
     color: var(--muted, #8b949e); text-decoration: none; font-size: 11px;
     padding: 4px 8px; border-radius: 4px; transition: color 0.15s;
   }
-  .meridian-profile-bar .profile-nav a:hover { color: var(--text, #e6edf3); }
-  .meridian-profile-bar .profile-nav a.active { color: var(--accent, #58a6ff); }
+  .ginny-profile-bar .profile-nav a:hover { color: var(--text, #e6edf3); }
+  .ginny-profile-bar .profile-nav a.active { color: var(--accent, #58a6ff); }
 `
 
 export const profileBarHtml = `
-<div class="meridian-profile-bar" id="meridianProfileBar">
+<div class="ginny-profile-bar" id="ginnyProfileBar">
   <span class="profile-label">Profile</span>
-  <select id="meridianProfileSelect"></select>
-  <span class="profile-type" id="meridianProfileType"></span>
-  <span class="profile-status" id="meridianProfileStatus">✓ Switched</span>
+  <select id="ginnyProfileSelect"></select>
+  <span class="profile-type" id="ginnyProfileType"></span>
+  <span class="profile-status" id="ginnyProfileStatus">✓ Switched</span>
   <div class="spacer"></div>
   <div class="profile-nav">
     <a href="/" id="nav-home">Home</a>
@@ -67,10 +67,10 @@ export const profileBarHtml = `
 
 export const profileBarJs = `
 (function() {
-  var profileBar = document.getElementById('meridianProfileBar');
-  var profileSelect = document.getElementById('meridianProfileSelect');
-  var profileType = document.getElementById('meridianProfileType');
-  var profileStatus = document.getElementById('meridianProfileStatus');
+  var profileBar = document.getElementById('ginnyProfileBar');
+  var profileSelect = document.getElementById('ginnyProfileSelect');
+  var profileType = document.getElementById('ginnyProfileType');
+  var profileStatus = document.getElementById('ginnyProfileStatus');
   var statusTimeout;
 
   // Highlight active nav link

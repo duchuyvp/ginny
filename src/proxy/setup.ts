@@ -1,10 +1,10 @@
 /**
- * Meridian setup — OpenCode plugin configuration.
+ * Ginny setup — OpenCode plugin configuration.
  *
- * Manages the meridian plugin entry in ~/.config/opencode/opencode.json
+ * Manages the ginny plugin entry in ~/.config/opencode/opencode.json
  * (or the platform-equivalent path). Called by:
- *   - `meridian setup`  — writes the plugin entry
- *   - `meridian` startup — warns if plugin is missing
+ *   - `ginny setup`  — writes the plugin entry
+ *   - `ginny` startup — warns if plugin is missing
  *   - `GET /health`     — reports plugin status
  */
 
@@ -35,12 +35,12 @@ export function findOpencodeConfigPath(): string {
 }
 
 /**
- * Resolve the absolute path to plugin/meridian.ts from any entry point.
+ * Resolve the absolute path to plugin/ginny.ts from any entry point.
  * Works whether called from bin/cli.ts (dev) or dist/cli.js (installed).
  */
 export function findPluginPath(fromUrl: string): string {
   const dir = dirname(fileURLToPath(fromUrl))
-  return join(dir, "..", "plugin", "meridian.ts")
+  return join(dir, "..", "plugin", "ginny.ts")
 }
 
 // ---------------------------------------------------------------------------
@@ -50,17 +50,20 @@ export function findPluginPath(fromUrl: string): string {
 const STALE_PATTERNS = [
   "opencode-claude-max-proxy",
   "claude-max-headers",
+  "ginny-agent-mode",
   "meridian-agent-mode",
+  "meridian.ts",
+  "@rynfar/meridian",
 ]
 
-function isMeridianEntry(entry: string): boolean {
+function isGinnyEntry(entry: string): boolean {
   return STALE_PATTERNS.some(p => entry.includes(p)) ||
-    entry.includes("meridian.ts") ||
-    entry.includes("@rynfar/meridian")
+    entry.includes("ginny.ts") ||
+    entry.includes("ginny")
 }
 
 /**
- * Returns true if the meridian plugin is already configured in the
+ * Returns true if the ginny plugin is already configured in the
  * OpenCode global config. Returns false if config doesn't exist or
  * plugin is missing.
  */
@@ -71,7 +74,7 @@ export function checkPluginConfigured(configPath?: string): boolean {
     const raw = readFileSync(path, "utf-8")
     const config = JSON.parse(raw)
     const plugins: unknown[] = Array.isArray(config.plugin) ? config.plugin : []
-    return plugins.some(p => typeof p === "string" && isMeridianEntry(p))
+    return plugins.some(p => typeof p === "string" && isGinnyEntry(p))
   } catch {
     return false
   }
@@ -90,10 +93,10 @@ export interface SetupResult {
 }
 
 /**
- * Configure the meridian plugin in ~/.config/opencode/opencode.json.
+ * Configure the ginny plugin in ~/.config/opencode/opencode.json.
  *
  * - Creates the config file if it doesn't exist
- * - Removes stale meridian plugin entries from previous installs
+ * - Removes stale ginny plugin entries from previous installs
  * - Adds the current plugin path
  * - Leaves all other plugins untouched
  */
@@ -119,9 +122,9 @@ export function runSetup(pluginPath: string, configPath?: string): SetupResult {
     ? (config.plugin as unknown[]).filter((p): p is string => typeof p === "string")
     : []
 
-  // Split into stale meridian entries and everything else
-  const removedStale = existing.filter(isMeridianEntry)
-  const others = existing.filter(p => !isMeridianEntry(p))
+  // Split into stale ginny entries and everything else
+  const removedStale = existing.filter(isGinnyEntry)
+  const others = existing.filter(p => !isGinnyEntry(p))
   const alreadyConfigured = removedStale.some(p => p === pluginPath)
 
   config.plugin = [...others, pluginPath]

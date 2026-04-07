@@ -1,5 +1,5 @@
 /**
- * Meridian OpenCode plugin.
+ * Ginny OpenCode plugin.
  *
  * Injects headers into every Anthropic API request so the proxy can:
  *   1. Track sessions reliably (x-opencode-session / x-opencode-request)
@@ -8,10 +8,10 @@
  *      — subagents get sonnet / opus (200k, preserves rate-limit budget)
  *
  * Install once globally:
- *   meridian setup
+ *   ginny setup
  *
  * Or manually add to ~/.config/opencode/opencode.json:
- *   { "plugin": ["/absolute/path/to/plugin/meridian.ts"] }
+ *   { "plugin": ["/absolute/path/to/plugin/ginny.ts"] }
  */
 
 type Plugin = (input: any) => Promise<{
@@ -28,7 +28,7 @@ type Plugin = (input: any) => Promise<{
   ) => Promise<void>
 }>
 
-const MeridianPlugin: Plugin = async () => {
+const GinnyPlugin: Plugin = async () => {
   return {
     "chat.headers": async (incoming, output) => {
       // Only inject headers for Anthropic provider requests
@@ -51,4 +51,4 @@ const MeridianPlugin: Plugin = async () => {
   }
 }
 
-export default MeridianPlugin
+export default GinnyPlugin

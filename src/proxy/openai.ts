@@ -5,7 +5,7 @@
  * and /v1/models routes in server.ts.
  *
  * Design note: OpenAI clients always send the full conversation history on
- * every request. Feeding that directly into Meridian's session system would
+ * every request. Feeding that directly into Ginny's session system would
  * classify every turn as "undo" or "diverged" (since the message list keeps
  * changing). Instead:
  *   1. The last user message becomes the actual SDK request
@@ -13,7 +13,7 @@
  *      system prompt so Claude has context
  *   3. Each chat completions request gets a fresh SDK session
  * This is intentional — OpenAI-format clients replay full history themselves
- * and don't benefit from Meridian's session resumption.
+ * and don't benefit from Ginny's session resumption.
  */
 
 // ---------------------------------------------------------------------------
@@ -158,7 +158,7 @@ export function translateOpenAiToAnthropic(body: OpenAiChatRequest): AnthropicRe
   }
 
   // Pack prior turns into system context so each request is a fresh session.
-  // OpenAI clients resend full history; Meridian's session system would
+  // OpenAI clients resend full history; Ginny's session system would
   // misclassify repeated history as undo/diverged. This avoids that.
   let systemPrompt = systemParts.join("\n")
   let messagesToSend: AnthropicMessage[] = turns

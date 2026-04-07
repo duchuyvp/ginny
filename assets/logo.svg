@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
-  <!-- Meridian axis -->
+  <!-- Ginny axis -->
   <line x1="256" y1="40" x2="256" y2="472" stroke="#8B7CF6" stroke-width="12" stroke-linecap="round"/>
   <!-- Latitude arcs — outer pair -->
   <path d="M110 130 A166 166 0 0 1 402 130" fill="none" stroke="#C4B5FD" stroke-width="7" opacity="0.4"/>

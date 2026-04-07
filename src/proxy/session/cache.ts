@@ -28,12 +28,12 @@ import {
 const DEFAULT_MAX_SESSIONS = 1000
 
 export function getMaxSessionsLimit(): number {
-  const raw = process.env.MERIDIAN_MAX_SESSIONS ?? process.env.CLAUDE_PROXY_MAX_SESSIONS
+  const raw = process.env.GINNY_MAX_SESSIONS ?? process.env.CLAUDE_PROXY_MAX_SESSIONS
   if (!raw) return DEFAULT_MAX_SESSIONS
 
   const parsed = Number.parseInt(raw, 10)
   if (!Number.isFinite(parsed) || parsed <= 0) {
-    console.warn(`[PROXY] Invalid MERIDIAN_MAX_SESSIONS value "${raw}"; using default ${DEFAULT_MAX_SESSIONS}`)
+    console.warn(`[PROXY] Invalid GINNY_MAX_SESSIONS value "${raw}"; using default ${DEFAULT_MAX_SESSIONS}`)
     return DEFAULT_MAX_SESSIONS
   }
 
@@ -76,7 +76,7 @@ let sessionCache = createSessionCache(activeMaxSessions)
 let fingerprintCache = createFingerprintCache(activeMaxSessions)
 
 /** Clear all session caches (used in tests).
- *  Re-reads MERIDIAN_MAX_SESSIONS / CLAUDE_PROXY_MAX_SESSIONS so tests can override the limit. */
+ *  Re-reads GINNY_MAX_SESSIONS / CLAUDE_PROXY_MAX_SESSIONS so tests can override the limit. */
 export function clearSessionCache() {
   const configuredLimit = getMaxSessionsLimit()
   if (configuredLimit !== activeMaxSessions) {

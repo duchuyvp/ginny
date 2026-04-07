@@ -20,8 +20,8 @@ beforeEach(() => {
 
 describe("resolveProfile", () => {
   const profiles: ProfileConfig[] = [
-    { id: "personal", type: "claude-max", claudeConfigDir: "/home/.config/meridian/profiles/personal" },
-    { id: "work", type: "claude-max", claudeConfigDir: "/home/.config/meridian/profiles/work" },
+    { id: "personal", type: "claude-max", claudeConfigDir: "/home/.config/ginny/profiles/personal" },
+    { id: "work", type: "claude-max", claudeConfigDir: "/home/.config/ginny/profiles/work" },
     { id: "api-test", type: "api", apiKey: "sk-test-123", baseUrl: "https://api.example.com" },
   ]
 
@@ -42,13 +42,13 @@ describe("resolveProfile", () => {
     const result = resolveProfile(profiles, undefined)
     expect(result.id).toBe("personal")
     expect(result.type).toBe("claude-max")
-    expect(result.env).toEqual({ CLAUDE_CONFIG_DIR: "/home/.config/meridian/profiles/personal" })
+    expect(result.env).toEqual({ CLAUDE_CONFIG_DIR: "/home/.config/ginny/profiles/personal" })
   })
 
   test("resolves requested profile by header", () => {
     const result = resolveProfile(profiles, undefined, "work")
     expect(result.id).toBe("work")
-    expect(result.env).toEqual({ CLAUDE_CONFIG_DIR: "/home/.config/meridian/profiles/work" })
+    expect(result.env).toEqual({ CLAUDE_CONFIG_DIR: "/home/.config/ginny/profiles/work" })
   })
 
   test("resolves api profile with API key and base URL", () => {
