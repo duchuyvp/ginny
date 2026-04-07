@@ -14,7 +14,7 @@ Today's date: 2026-03-28
 # The commands below were executed at the start of all sessions to gather context about the environment.
 
 % pwd
-/Users/rynfar/repos/my-project
+/Users/duchuyvp/repos/my-project
 
 % ls
 src
@@ -26,7 +26,7 @@ main
 
 </system-reminder>`
 
-function makeDroidBody(cwd: string = "/Users/rynfar/repos/my-project"): any {
+function makeDroidBody(cwd: string = "/Users/duchuyvp/repos/my-project"): any {
   return {
     model: "claude-sonnet-4-5-20250514",
     max_tokens: 32000,
@@ -36,7 +36,7 @@ function makeDroidBody(cwd: string = "/Users/rynfar/repos/my-project"): any {
         content: [
           {
             type: "text",
-            text: DROID_SYSTEM_REMINDER.replace("/Users/rynfar/repos/my-project", cwd),
+            text: DROID_SYSTEM_REMINDER.replace("/Users/duchuyvp/repos/my-project", cwd),
             cache_control: { type: "ephemeral" },
           },
           {
@@ -87,8 +87,8 @@ describe("droidAdapter.getSessionId", () => {
 
 describe("droidAdapter.extractWorkingDirectory", () => {
   it("extracts CWD from system-reminder in first user message", () => {
-    const body = makeDroidBody("/Users/rynfar/repos/my-project")
-    expect(droidAdapter.extractWorkingDirectory(body)).toBe("/Users/rynfar/repos/my-project")
+    const body = makeDroidBody("/Users/duchuyvp/repos/my-project")
+    expect(droidAdapter.extractWorkingDirectory(body)).toBe("/Users/duchuyvp/repos/my-project")
   })
 
   it("extracts different CWD paths correctly", () => {
@@ -159,7 +159,7 @@ describe("droidAdapter.extractWorkingDirectory", () => {
         { role: "user", content: [{ type: "text", text: "Follow up" }] },
       ],
     }
-    expect(droidAdapter.extractWorkingDirectory(body)).toBe("/Users/rynfar/repos/my-project")
+    expect(droidAdapter.extractWorkingDirectory(body)).toBe("/Users/duchuyvp/repos/my-project")
   })
 
   it("handles string content in messages gracefully (no crash)", () => {

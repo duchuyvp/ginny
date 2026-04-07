@@ -274,7 +274,7 @@ export function createProxyServer(config: Partial<ProxyConfig> = {}): ProxyServe
         // Operators can override the policy at runtime via the GINNY_BETA_POLICY
         // env var: `strip-all` restores the pre-fix behaviour (kill switch),
         // `allow-all` forwards everything unconditionally.
-        // See: https://github.com/rynfar/ginny/issues/278
+        // See: https://github.com/duchuyvp/ginny/issues/278
         const rawBetaHeader = c.req.header("anthropic-beta")
         const betaFilter = filterBetasForProfile(rawBetaHeader, profile.type, getBetaPolicyFromEnv())
         if (betaFilter.stripped.length > 0) {

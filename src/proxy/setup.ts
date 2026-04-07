@@ -54,6 +54,7 @@ const STALE_PATTERNS = [
   "meridian-agent-mode",
   "meridian.ts",
   "@rynfar/meridian",
+  "@duchuyvp/ginny",
 ]
 
 function isGinnyEntry(entry: string): boolean {
