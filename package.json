@@ -6,8 +6,7 @@
   "main": "./dist/server.js",
   "types": "./dist/proxy/server.d.ts",
   "bin": {
-    "meridian": "./dist/cli.js",
-    "claude-max-proxy": "./dist/cli.js"
+    "ginny": "./dist/cli.js"
   },
   "exports": {
     ".": {
@@ -71,11 +70,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rynfar/meridian.git"
+    "url": "git+https://github.com/duchuyvp/ginny.git"
   },
-  "homepage": "https://github.com/rynfar/meridian#readme",
+  "homepage": "https://github.com/duchuyvp/ginny#readme",
   "bugs": {
-    "url": "https://github.com/rynfar/meridian/issues"
+    "url": "https://github.com/duchuyvp/ginny/issues"
   },
   "author": "rynfar",
   "license": "MIT",
