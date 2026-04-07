@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.30.1](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.0...ginny-v1.30.1) (2026-04-07)
+
+
+### Bug Fixes
+
+* correct package name to ginny for npm publish ([e380f25](https://github.com/duchuyvp/ginny/commit/e380f252b0e532452fd9a1bcf52014e790988035))
+
 ## [1.30.0](https://github.com/duchuyvp/ginny/compare/ginny-v1.29.2...ginny-v1.30.0) (2026-04-07)
 
 
