@@ -2,6 +2,7 @@
   "packages": {
     ".": {
       "release-type": "node",
+      "component": "ginny",
       "changelog-sections": [
         { "type": "feat", "section": "Features" },
         { "type": "fix", "section": "Bug Fixes" },
