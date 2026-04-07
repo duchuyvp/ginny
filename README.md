@@ -30,6 +30,28 @@ Ginny bridges the Claude Code SDK to the standard Anthropic API. No OAuth interc
 >
 > Ginny includes a dedicated OpenClaw adapter with full tool passthrough support. OpenClaw manages its own tool execution loop — Ginny returns `tool_use` blocks to OpenClaw for execution rather than running them internally. See [OpenClaw setup](#openclaw) below.
 
+## Origin Story
+
+Ginny is a fork of [Meridian](https://github.com/rynfar/meridian) by [@rynfar](https://github.com/rynfar) (Trevor Walker). We want to be upfront about that, and we want to give credit where it's due.
+
+Meridian is an excellent piece of engineering. Trevor built the core architecture that makes all of this possible — the SDK integration, session management, passthrough mode, streaming pipeline, multi-profile support, and the adapter pattern that lets different agents plug in cleanly. That's hundreds of commits of careful, thoughtful work. Ginny stands on those shoulders.
+
+**So why fork?**
+
+We use [OpenClaw](https://openclaw.ai) as our daily driver — it's an autonomous personal assistant that manages tools, memory, scheduling, and multi-channel workflows. When we tried to connect it to Claude Max through Meridian, we ran into a gap: Meridian's maintainer decided not to support OpenClaw, viewing autonomous agents as harmful to the sustainability of the Max plan. That's a reasonable position, and we respect it.
+
+But we disagreed. We believe OpenClaw is a legitimate frontend — it manages its own tool execution, respects rate limits, and routes through the same SDK guardrails as any other agent. The tools it calls (read files, run commands, search memory) are the same operations OpenCode or Cline perform. The difference is orchestration, not abuse.
+
+So we forked. Ginny adds:
+
+- A dedicated **OpenClaw adapter** with tool passthrough and large system prompt handling
+- A workaround for the SDK's **system prompt token limit** (>25K chars)
+- Full rebranding to avoid confusion with the upstream project
+
+Everything else — the session management, streaming, profiles, telemetry — is Meridian's work. We'll continue to pull in upstream improvements when they align, and we hope this fork is useful to anyone who wants to connect their preferred agent to Claude Max without asking permission.
+
+If Meridian works for your setup, use Meridian. It's well-maintained and battle-tested. Ginny exists for the cases where it doesn't.
+
 ## Quick Start
 
 ```bash
