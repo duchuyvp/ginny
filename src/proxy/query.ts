@@ -75,8 +75,21 @@ export function buildQueryOptions(ctx: QueryContext): BuildQueryResult {
   const mcpServerName = adapter.getMcpServerName()
   const allowedMcpTools = [...adapter.getAllowedMcpTools()]
 
+  // For passthrough mode with large system prompts (>25K chars),
+  // prepend to the user prompt instead of using SDK's systemPrompt.
+  // The SDK's systemPrompt triggers "out of extra usage" billing errors
+  // when combined with Claude Code's internal context.
+  const MAX_SYSTEM_PROMPT_LENGTH = 25000
+  const systemPromptTooLong = passthrough && systemContext && systemContext.length > MAX_SYSTEM_PROMPT_LENGTH
+  const effectivePrompt = systemPromptTooLong
+    ? `${systemContext}\n\n${prompt}`
+    : prompt
+  const effectiveSystemPrompt = systemPromptTooLong
+    ? '.'
+    : systemContext
+
   return {
-    prompt,
+    prompt: effectivePrompt,
     options: {
       // Force Node as the executable. The claude-agent-sdk auto-detects Bun
       // via process.versions.bun and defaults to spawning `bun cli.js`.
@@ -95,10 +108,10 @@ export function buildQueryOptions(ctx: QueryContext): BuildQueryResult {
       ...(stream ? { includePartialMessages: true } : {}),
       permissionMode: "bypassPermissions" as const,
       allowDangerouslySkipPermissions: true,
-      ...(systemContext ? {
+      ...(effectiveSystemPrompt ? {
         systemPrompt: passthrough
-          ? systemContext
-          : { type: "preset" as const, preset: "claude_code" as const, append: systemContext }
+          ? effectiveSystemPrompt
+          : { type: "preset" as const, preset: "claude_code" as const, append: effectiveSystemPrompt }
       } : {}),
       ...(passthrough
         ? {

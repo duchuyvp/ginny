@@ -12,6 +12,7 @@ import { droidAdapter } from "./droid"
 import { crushAdapter } from "./crush"
 import { passthroughAdapter } from "./passthrough"
 import { piAdapter } from "./pi"
+import { openClawAdapter } from "./openclaw"
 
 const ADAPTER_MAP: Record<string, AgentAdapter> = {
   opencode: openCodeAdapter,
@@ -19,6 +20,7 @@ const ADAPTER_MAP: Record<string, AgentAdapter> = {
   crush: crushAdapter,
   passthrough: passthroughAdapter,
   pi: piAdapter,
+  openclaw: openClawAdapter,
 }
 
 const envDefault = process.env.MERIDIAN_DEFAULT_AGENT || ""
@@ -52,8 +54,9 @@ function isLiteLLMRequest(c: Context): boolean {
  * 3. User-Agent starts with "opencode/"     → OpenCode adapter
  * 4. User-Agent starts with "factory-cli/"  → Droid adapter
  * 5. User-Agent starts with "Charm-Crush/"  → Crush adapter
- * 6. litellm/* UA or x-litellm-* headers   → LiteLLM passthrough adapter
- * 7. Default                                → MERIDIAN_DEFAULT_AGENT env var, or OpenCode
+ * 6. openclaw/* UA or x-openclaw-* headers  → OpenClaw passthrough adapter
+ * 7. litellm/* UA or x-litellm-* headers   → LiteLLM passthrough adapter
+ * 8. Default                                → MERIDIAN_DEFAULT_AGENT env var, or OpenCode
  */
 export function detectAdapter(c: Context): AgentAdapter {
   const agentOverride = c.req.header("x-meridian-agent")?.toLowerCase()
@@ -71,6 +74,11 @@ export function detectAdapter(c: Context): AgentAdapter {
   // OpenCode User-Agent: opencode/<version>
   if (userAgent.startsWith("opencode/")) {
     return openCodeAdapter
+  }
+
+  // OpenClaw: detected via User-Agent or x-openclaw-* headers
+  if (userAgent.startsWith("openclaw/") || userAgent.includes("openclaw")) {
+    return openClawAdapter
   }
 
   if (userAgent.startsWith("factory-cli/")) {
