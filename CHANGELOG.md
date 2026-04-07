@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.30.3](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.2...ginny-v1.30.3) (2026-04-07)
+
+
+### Bug Fixes
+
+* update repository URLs and bin name to duchuyvp/ginny ([bc144de](https://github.com/duchuyvp/ginny/commit/bc144de6c924862d0b583b437c9bdbe96d4000c5))
+
 ## [1.30.2](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.1...ginny-v1.30.2) (2026-04-07)
 
 
