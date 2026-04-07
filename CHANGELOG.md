@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.31.0](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.3...ginny-v1.31.0) (2026-04-07)
+
+
+### Features
+
+* add OpenClaw agent adapter with large system prompt support ([d76f087](https://github.com/duchuyvp/ginny/commit/d76f08718c85f04b3965588192d847407d8ed42e))
+
 ## [1.30.3](https://github.com/duchuyvp/ginny/compare/ginny-v1.30.2...ginny-v1.30.3) (2026-04-07)
 
 
