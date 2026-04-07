@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/rynfar/ginny/releases"><img src="https://img.shields.io/github/v/release/rynfar/ginny?style=flat-square&color=6366f1&label=release" alt="Release"></a>
+  <a href="https://github.com/duchuyvp/ginny/releases"><img src="https://img.shields.io/github/v/release/duchuyvp/ginny?style=flat-square&color=6366f1&label=release" alt="Release"></a>
   <a href="https://www.npmjs.com/package/ginny"><img src="https://img.shields.io/npm/v/ginny?style=flat-square&color=8b5cf6&label=npm" alt="npm"></a>
   <a href="#"><img src="https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-a78bfa?style=flat-square" alt="Platform"></a>
   <a href="#"><img src="https://img.shields.io/badge/license-MIT-c4b5fd?style=flat-square" alt="License"></a>
@@ -12,7 +12,7 @@
 
 ---
 
-Ginny bridges the Claude Code SDK to the standard Anthropic API. No OAuth interception. No binary patches. No hacks. Just pure, documented SDK calls. Any tool that speaks the Anthropic or OpenAI protocol — OpenCode, Crush, Cline, Aider, Pi, Droid, Open WebUI — connects to Ginny and gets Claude, with session management, streaming, and prompt caching handled natively by the SDK.
+Ginny bridges the Claude Code SDK to the standard Anthropic API. No OAuth interception. No binary patches. No hacks. Just pure, documented SDK calls. Any tool that speaks the Anthropic or OpenAI protocol — OpenClaw, OpenCode, Crush, Cline, Aider, Pi, Droid, Open WebUI — connects to Ginny and gets Claude, with session management, streaming, and prompt caching handled natively by the SDK.
 
 > [!NOTE]
 > ### How Ginny works with Anthropic
@@ -25,22 +25,16 @@ Ginny bridges the Claude Code SDK to the standard Anthropic API. No OAuth interc
 >
 > If you're looking for a tool that circumvents usage limits or bypasses Anthropic's controls, this project is not for you. We play nice with the SDK because we believe that's how developers can continue to choose their own frontends while respecting Anthropic's platform.
 
-> [!WARNING]
-> ### Why Ginny does not support OpenClaw
+> [!TIP]
+> ### OpenClaw Support
 >
-> There is technically a way to make Ginny work with OpenClaw, but we're not interested in pursuing it.
->
-> The reason Claude Max offers generous usage limits is because Anthropic can justify it through Claude Code — their harness, their optimizations, their control. OpenClaw blows through that with autonomous workflows that Anthropic has little ability to manage or optimize. Using Opus to check an email when a local model would handle it fine isn't efficient use — it's waste that degrades the plan for everyone.
->
-> I built Ginny because I believe developers should have the right to use the frontend of their choice. But that right comes with a responsibility: don't wreck the subscription for the rest of us. Sloppy autonomous agents that burn through Claude Max tokens are directly counter-productive to developers like me who depend on the plan being sustainable.
->
-> Ginny's philosophy is simple — play nice with the SDK, let Anthropic optimize how they see fit, and use the frontend you want within the constraints of Claude Code. OpenClaw is not just a frontend; it's an autonomous system that abuses the Max plan. We won't be supporting it.
+> Ginny includes a dedicated OpenClaw adapter with full tool passthrough support. OpenClaw manages its own tool execution loop — Ginny returns `tool_use` blocks to OpenClaw for execution rather than running them internally. See [OpenClaw setup](#openclaw) below.
 
 ## Quick Start
 
 ```bash
 # 1. Install
-npm install -g ginny
+npm install -g @duchuyvp/ginny
 
 # 2. Authenticate (one time)
 claude login
@@ -145,6 +139,48 @@ When `GINNY_PROFILES` is set, it takes precedence over disk-configured profiles.
 
 ## Agent Setup
 
+### OpenClaw
+
+Configure your OpenClaw provider to point at Ginny in `~/.openclaw/openclaw.json`:
+
+```json
+{
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "ant": {
+        "baseUrl": "http://127.0.0.1:3456/v1",
+        "api": "anthropic-messages",
+        "apiKey": "blank",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "Claude Opus 4.6 (Ginny)",
+            "contextWindow": 1000000,
+            "maxTokens": 4096,
+            "input": ["text"],
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "reasoning": false
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+Then start Ginny with the OpenClaw adapter:
+
+```bash
+GINNY_DEFAULT_AGENT=openclaw ginny
+```
+
+OpenClaw is auto-detected via its User-Agent. If detection fails, the `GINNY_DEFAULT_AGENT` env var ensures the correct adapter is used. The OpenClaw adapter:
+
+- Uses **passthrough mode** — tool calls are returned to OpenClaw for execution
+- Sets CWD to `~/.openclaw/workspace`
+- Handles large system prompts (>25K chars) by prepending to the user prompt
+
 ### OpenCode
 
 **Step 1: Run `ginny setup` (required, one time)**
@@ -181,8 +217,8 @@ Add a provider to `~/.config/crush/crush.json`:
 ```json
 {
   "providers": {
-    "ginny": {
-      "id": "ginny",
+    "@duchuyvp/ginny": {
+      "id": "@duchuyvp/ginny",
       "name": "Ginny",
       "type": "anthropic",
       "base_url": "http://127.0.0.1:3456",
@@ -304,6 +340,7 @@ export ANTHROPIC_BASE_URL=http://127.0.0.1:3456
 
 | Agent | Status | Notes |
 |-------|--------|-------|
+| [OpenClaw](https://openclaw.ai) | ✅ Verified | `GINNY_DEFAULT_AGENT=openclaw` — full tool passthrough, streaming, session management |
 | [OpenCode](https://github.com/anomalyco/opencode) | ✅ Verified | Requires `ginny setup` — full tool support, session resume, streaming, subagents |
 | [Droid (Factory AI)](https://factory.ai/product/ide) | ✅ Verified | BYOK config (see above) — full tool support, session resume, streaming |
 | [Crush](https://github.com/charmbracelet/crush) | ✅ Verified | Provider config (see above) — full tool support, session resume, headless `crush run` |
@@ -313,7 +350,7 @@ export ANTHROPIC_BASE_URL=http://127.0.0.1:3456
 | [Pi](https://github.com/mariozechner/pi-coding-agent) | ✅ Verified | models.json config (see above) — requires `GINNY_DEFAULT_AGENT=pi` |
 | [Continue](https://github.com/continuedev/continue) | 🔲 Untested | OpenAI-compatible endpoints should work — set `apiBase` to `http://127.0.0.1:3456` |
 
-Tested an agent or built a plugin? [Open an issue](https://github.com/rynfar/ginny/issues) and we'll add it.
+Tested an agent or built a plugin? [Open an issue](https://github.com/duchuyvp/ginny/issues) and we'll add it.
 
 ## Architecture
 
@@ -326,6 +363,7 @@ src/proxy/
 │   ├── opencode.ts        ← OpenCode adapter
 │   ├── crush.ts           ← Crush adapter
 │   ├── droid.ts           ← Droid adapter
+│   ├── openclaw.ts        ← OpenClaw passthrough adapter
 │   ├── pi.ts              ← Pi adapter
 │   └── passthrough.ts     ← LiteLLM passthrough adapter
 ├── query.ts               ← SDK query options builder
@@ -370,6 +408,7 @@ Agents are identified from request headers automatically:
 | Signal | Adapter |
 |---|---|
 | `x-ginny-agent` header | Explicit override (any adapter) |
+| `openclaw/` User-Agent | OpenClaw |
 | `Charm-Crush/` User-Agent | Crush |
 | `factory-cli/` User-Agent | Droid |
 | `litellm/` UA or `x-litellm-*` headers | LiteLLM passthrough |
@@ -448,7 +487,7 @@ Health response example:
 ## Programmatic API
 
 ```typescript
-import { startProxyServer } from "ginny"
+import { startProxyServer } from "@duchuyvp/ginny"
 
 const instance = await startProxyServer({
   port: 3456,
