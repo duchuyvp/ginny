@@ -30,27 +30,15 @@ Ginny bridges the Claude Code SDK to the standard Anthropic API. No OAuth interc
 >
 > Ginny includes a dedicated OpenClaw adapter with full tool passthrough support. OpenClaw manages its own tool execution loop — Ginny returns `tool_use` blocks to OpenClaw for execution rather than running them internally. See [OpenClaw setup](#openclaw) below.
 
-## Origin Story
+## Origin & Acknowledgments
 
-Ginny is a fork of [Meridian](https://github.com/rynfar/meridian) by [@rynfar](https://github.com/rynfar) (Trevor Walker). We want to be upfront about that, and we want to give credit where it's due.
+Ginny is a fork of [Meridian](https://github.com/rynfar/meridian) by [@rynfar](https://github.com/rynfar). The session management, streaming pipeline, adapter pattern, multi-profile support, and everything that makes this project solid — that's Trevor's work. We're grateful for it.
 
-Meridian is an excellent piece of engineering. Trevor built the core architecture that makes all of this possible — the SDK integration, session management, passthrough mode, streaming pipeline, multi-profile support, and the adapter pattern that lets different agents plug in cleanly. That's hundreds of commits of careful, thoughtful work. Ginny stands on those shoulders.
+After [Anthropic blocked third-party agents from Claude subscriptions](https://techcrunch.com/2026/04/04/anthropic-says-claude-code-subscribers-will-need-to-pay-extra-for-openclaw-support/) in April 2026, projects like Meridian emerged to bridge the gap using the official Claude Code SDK. Meridian chose not to support OpenClaw specifically. We understand that choice — people draw different lines about what's appropriate use of a subscription.
 
-**So why fork?**
+We drew ours differently. We use OpenClaw daily and wanted it to work. So we forked, added an OpenClaw adapter, and called it Ginny.
 
-We use [OpenClaw](https://openclaw.ai) as our daily driver — it's an autonomous personal assistant that manages tools, memory, scheduling, and multi-channel workflows. When we tried to connect it to Claude Max through Meridian, we ran into a gap: Meridian's maintainer decided not to support OpenClaw, viewing autonomous agents as harmful to the sustainability of the Max plan. That's a reasonable position, and we respect it.
-
-But we disagreed. We believe OpenClaw is a legitimate frontend — it manages its own tool execution, respects rate limits, and routes through the same SDK guardrails as any other agent. The tools it calls (read files, run commands, search memory) are the same operations OpenCode or Cline perform. The difference is orchestration, not abuse.
-
-So we forked. Ginny adds:
-
-- A dedicated **OpenClaw adapter** with tool passthrough and large system prompt handling
-- A workaround for the SDK's **system prompt token limit** (>25K chars)
-- Full rebranding to avoid confusion with the upstream project
-
-Everything else — the session management, streaming, profiles, telemetry — is Meridian's work. We'll continue to pull in upstream improvements when they align, and we hope this fork is useful to anyone who wants to connect their preferred agent to Claude Max without asking permission.
-
-If Meridian works for your setup, use Meridian. It's well-maintained and battle-tested. Ginny exists for the cases where it doesn't.
+If Meridian works for your setup, use Meridian — it's excellent. Ginny is here for those who need something it doesn't cover.
 
 ## Quick Start
 
