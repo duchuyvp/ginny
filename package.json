@@ -1,6 +1,6 @@
 {
   "name": "@duchuyvp/ginny",
-  "version": "1.29.2-b",
+  "version": "1.30.0-b",
   "description": "Local Anthropic API powered by your Claude Max subscription. One subscription, every agent.",
   "type": "module",
   "main": "./dist/server.js",
